@@ -68,6 +68,20 @@ class GuildMemberManager extends CachedManager {
     return this.cache.has(userResolvable) ? userResolvable : null;
   }
 
+
+    /**
+   * The client user as a GuildMember of this guild
+   * @type {?GuildMember}
+   * @readonly
+   */
+  get me() {
+    return this.guild.me;
+  }
+
+  get fetchOwner() {
+    return this.guild.fetchOwner;
+  }
+
   /**
    * Options used to add a user to a guild using OAuth2.
    * @typedef {Object} AddGuildMemberOptions

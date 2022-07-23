@@ -939,6 +939,7 @@ export class Guild extends AnonymousGuild {
   public large: boolean;
   public maximumMembers: number | null;
   public maximumPresences: number | null;
+  /** @deprecated use 'guild.members.me' */
   public readonly me: GuildMember | null;
   public memberCount: number;
   public members: GuildMemberManager;
@@ -3220,6 +3221,8 @@ export class GuildManager extends CachedManager<Snowflake, Guild, GuildResolvabl
 export class GuildMemberManager extends CachedManager<Snowflake, GuildMember, GuildMemberResolvable> {
   private constructor(guild: Guild, iterable?: Iterable<RawGuildMemberData>);
   public guild: Guild;
+  public readonly me: GuildMember | null;
+  public fetchOwner(options?: BaseFetchOptions): Promise<GuildMember>;
   public add(
     user: UserResolvable,
     options: AddGuildMemberOptions & { fetchWhenExisting: false },
@@ -4207,7 +4210,6 @@ export interface ClientOptions {
   allowedMentions?: MessageMentionOptions;
   invalidRequestWarningInterval?: number;
   partials?: PartialTypes[];
-  restWsBridgeTimeout?: number;
   restTimeOffset?: number;
   restRequestTimeout?: number;
   restGlobalRateLimit?: number;
