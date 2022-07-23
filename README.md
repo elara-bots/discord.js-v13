@@ -1,3 +1,8 @@
+# This is a pretty modified version of discord.js version 13, all code was modified to remove stuff that isn't needed / was removed in v14. 
+# If you really want to use v13 please just use the original version by the discordjs developer team. 
+# I will not be responsible for anything going wrong if you use this modified version of discord.js
+
+
 <div align="center">
   <br />
   <p>
