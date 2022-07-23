@@ -5981,12 +5981,6 @@ export interface WebSocketProperties {
   os?: string;
   browser?: string;
   device?: string;
-  /** @deprecated Use {@link os} instead. */
-  $os?: string;
-  /** @deprecated Use {@link browser} instead. */
-  $browser?: string;
-  /** @deprecated Use {@link device} instead. */
-  $device?: string;
 }
 
 export interface WidgetActivity {
