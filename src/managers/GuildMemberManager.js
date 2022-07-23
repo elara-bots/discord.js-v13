@@ -78,8 +78,8 @@ class GuildMemberManager extends CachedManager {
     return this.guild.me;
   }
 
-  get fetchOwner() {
-    return this.guild.fetchOwner;
+  fetchOwner(options) {
+    return this.guild.fetchOwner(options);
   }
 
   /**
