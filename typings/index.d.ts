@@ -1211,22 +1211,6 @@ export class GuildPreviewEmoji extends BaseGuildEmoji {
   public roles: Snowflake[];
 }
 
-export class HTTPError extends Error {
-  private constructor(message: string, name: string, code: number, request: unknown);
-  public code: number;
-  public method: string;
-  public name: string;
-  public path: string;
-  public requestData: HTTPErrorData;
-}
-
-// tslint:disable-next-line:no-empty-interface - Merge RateLimitData into RateLimitError to not have to type it again
-export interface RateLimitError extends RateLimitData {}
-export class RateLimitError extends Error {
-  private constructor(data: RateLimitData);
-  public name: 'RateLimitError';
-}
-
 export class Integration extends Base {
   private constructor(client: Client, data: RawIntegrationData, guild: Guild);
   public account: IntegrationAccount;

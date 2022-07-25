@@ -478,7 +478,7 @@ class Guild extends AnonymousGuild {
    * @returns {?string}
    */
   discoverySplashURL({ format, size } = {}) {
-    return this.discoverySplash && this.client.rest.cdn.DiscoverySplash(this.id, this.discoverySplash, format, size);
+    return this.discoverySplash && this.client.rest.cdn.discoverySplash(this.id, this.discoverySplash, format, size);
   }
 
   /**

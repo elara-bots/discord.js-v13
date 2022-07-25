@@ -367,7 +367,7 @@ class RichPresenceAssets {
       }
     }
 
-    return this.activity.presence.client.rest.cdn.AppAsset(this.activity.applicationId, this.smallImage, {
+    return this.activity.presence.client.rest.cdn.appAsset(this.activity.applicationId, this.smallImage, {
       format,
       size,
     });
@@ -394,7 +394,7 @@ class RichPresenceAssets {
       }
     }
 
-    return this.activity.presence.client.rest.cdn.AppAsset(this.activity.applicationId, this.largeImage, {
+    return this.activity.presence.client.rest.cdn.appAsset(this.activity.applicationId, this.largeImage, {
       format,
       size,
     });

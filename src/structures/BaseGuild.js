@@ -75,7 +75,7 @@ class BaseGuild extends Base {
    */
   iconURL({ format, size, dynamic } = {}) {
     if (!this.icon) return null;
-    return this.client.rest.cdn.Icon(this.id, this.icon, format, size, dynamic);
+    return this.client.rest.cdn.icon(this.id, this.icon, format, size, dynamic);
   }
 
   /**

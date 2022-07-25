@@ -139,7 +139,7 @@ class GuildPreview extends Base {
    * @returns {?string}
    */
   splashURL({ format, size } = {}) {
-    return this.splash && this.client.rest.cdn.Splash(this.id, this.splash, format, size);
+    return this.splash && this.client.rest.cdn.splash(this.id, this.splash, format, size);
   }
 
   /**
@@ -148,7 +148,7 @@ class GuildPreview extends Base {
    * @returns {?string}
    */
   discoverySplashURL({ format, size } = {}) {
-    return this.discoverySplash && this.client.rest.cdn.DiscoverySplash(this.id, this.discoverySplash, format, size);
+    return this.discoverySplash && this.client.rest.cdn.discoverySplash(this.id, this.discoverySplash, format, size);
   }
 
   /**
@@ -157,7 +157,7 @@ class GuildPreview extends Base {
    * @returns {?string}
    */
   iconURL({ format, size, dynamic } = {}) {
-    return this.icon && this.client.rest.cdn.Icon(this.id, this.icon, format, size, dynamic);
+    return this.icon && this.client.rest.cdn.icon(this.id, this.icon, format, size, dynamic);
   }
 
   /**

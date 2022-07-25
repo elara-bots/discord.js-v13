@@ -129,7 +129,7 @@ class GuildMember extends Base {
    */
   avatarURL({ format, size, dynamic } = {}) {
     if (!this.avatar) return null;
-    return this.client.rest.cdn.GuildMemberAvatar(this.guild.id, this.id, this.avatar, format, size, dynamic);
+    return this.client.rest.cdn.guildMemberAvatar(this.guild.id, this.id, this.avatar, format, size, dynamic);
   }
 
   /**

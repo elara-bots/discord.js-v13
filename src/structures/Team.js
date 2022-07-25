@@ -95,7 +95,7 @@ class Team extends Base {
    */
   iconURL({ format, size } = {}) {
     if (!this.icon) return null;
-    return this.client.rest.cdn.TeamIcon(this.id, this.icon, { format, size });
+    return this.client.rest.cdn.teamIcon(this.id, this.icon, { format, size });
   }
 
   /**

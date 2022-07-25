@@ -79,7 +79,7 @@ class Application extends Base {
    */
   iconURL({ format, size } = {}) {
     if (!this.icon) return null;
-    return this.client.rest.cdn.AppIcon(this.id, this.icon, { format, size });
+    return this.client.rest.cdn.appIcon(this.id, this.icon, { format, size });
   }
 
   /**

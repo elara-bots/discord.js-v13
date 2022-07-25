@@ -400,7 +400,7 @@ class Webhook {
    */
   avatarURL({ format, size } = {}) {
     if (!this.avatar) return null;
-    return this.client.rest.cdn.Avatar(this.id, this.avatar, format, size);
+    return this.client.rest.cdn.avatar(this.id, this.avatar, format, size);
   }
 
   /**

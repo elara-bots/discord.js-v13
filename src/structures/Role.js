@@ -279,7 +279,7 @@ class Role extends Base {
    */
   iconURL({ format, size } = {}) {
     if (!this.icon) return null;
-    return this.client.rest.cdn.RoleIcon(this.id, this.icon, format, size);
+    return this.client.rest.cdn.roleIcon(this.id, this.icon, format, size);
   }
 
   /**
