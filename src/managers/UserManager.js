@@ -5,6 +5,7 @@ const { GuildMember } = require('../structures/GuildMember');
 const { Message } = require('../structures/Message');
 const ThreadMember = require('../structures/ThreadMember');
 const User = require('../structures/User');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Manages API methods for users and stores their cache.
@@ -55,10 +56,10 @@ class UserManager extends CachedManager {
       if (dmChannel && !dmChannel.partial) return dmChannel;
     }
 
-    const data = await this.client.api.users(this.client.user.id).channels.post({
-      data: {
-        recipient_id: id,
-      },
+    const data = await this.client.rest.post(Routes.userChannels(), {
+      body: {
+        recipient_id: id
+      }
     });
     return this.client.channels._add(data, null, { cache });
   }
@@ -72,7 +73,7 @@ class UserManager extends CachedManager {
     const id = this.resolveId(user);
     const dmChannel = this.dmChannel(id);
     if (!dmChannel) throw new Error('USER_NO_DM_CHANNEL');
-    await this.client.api.channels(dmChannel.id).delete();
+    await this.client.rest.delete(Routes.channel(dmChannel.id));
     this.client.channels._remove(dmChannel.id);
     return dmChannel;
   }
@@ -90,7 +91,7 @@ class UserManager extends CachedManager {
       if (existing && !existing.partial) return existing;
     }
 
-    const data = await this.client.api.users(id).get();
+    const data = await this.client.rest.get(Routes.user(id));
     return this._add(data, cache);
   }
 

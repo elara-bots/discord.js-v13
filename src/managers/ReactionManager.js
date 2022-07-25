@@ -2,6 +2,7 @@
 
 const CachedManager = require('./CachedManager');
 const MessageReaction = require('../structures/MessageReaction');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Manages API methods for reactions and holds their cache.
@@ -58,7 +59,7 @@ class ReactionManager extends CachedManager {
    * @returns {Promise<Message>}
    */
   async removeAll() {
-    await this.client.api.channels(this.message.channelId).messages(this.message.id).reactions.delete();
+    await this.client.rest.delete(Routes.channelMessageAllReactions(this.message.channelId, this.message.id));
     return this.message;
   }
 }

@@ -7,6 +7,7 @@ const MessageManager = require('../managers/MessageManager');
 const ThreadMemberManager = require('../managers/ThreadMemberManager');
 const Permissions = require('../util/Permissions');
 const { resolveAutoArchiveMaxLimit } = require('../util/Util');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Represents a thread channel on Discord.
@@ -316,9 +317,8 @@ class ThreadChannel extends Channel {
   async edit(data, reason) {
     let autoArchiveDuration = data.autoArchiveDuration;
     if (autoArchiveDuration === 'MAX') autoArchiveDuration = resolveAutoArchiveMaxLimit(this.guild);
-
-    const newData = await this.client.api.channels(this.id).patch({
-      data: {
+    const newData = await this.client.rest.patch(Routes.channel(this.id), {
+      body: {
         name: (data.name ?? this.name).trim(),
         archived: data.archived,
         auto_archive_duration: autoArchiveDuration,

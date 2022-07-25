@@ -5,6 +5,7 @@ const Application = require('./interfaces/Application');
 const ApplicationCommandManager = require('../managers/ApplicationCommandManager');
 const ApplicationFlags = require('../util/ApplicationFlags');
 const Permissions = require('../util/Permissions');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * @typedef {Object} ClientApplicationInstallParams
@@ -132,7 +133,7 @@ class ClientApplication extends Application {
    * @returns {Promise<ClientApplication>}
    */
   async fetch() {
-    const app = await this.client.api.oauth2.applications('@me').get();
+    const app = await this.client.rest.get(Routes.oauth2CurrentApplication());
     this._patch(app);
     return this;
   }

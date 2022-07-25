@@ -11,6 +11,7 @@ let VoiceChannel;
 let DirectoryChannel;
 const { ChannelTypes, ThreadChannelTypes, VoiceBasedChannelTypes } = require('../util/Constants');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
+const { Routes } = require('discord-api-types/v9');
 
 
 /**
@@ -89,7 +90,7 @@ class Channel extends Base {
    *   .catch(console.error);
    */
   async delete() {
-    await this.client.api.channels(this.id).delete();
+    await this.client.rest.delete(Routes.channel(this.id));
     return this;
   }
 

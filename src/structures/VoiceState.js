@@ -2,6 +2,7 @@
 
 const Base = require('./Base');
 const { Error, TypeError } = require('../errors');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Represents the voice state for a Guild Member.
@@ -219,12 +220,12 @@ class VoiceState extends Base {
 
     if (this.client.user.id !== this.id) throw new Error('VOICE_STATE_NOT_OWN');
 
-    await this.client.api.guilds(this.guild.id, 'voice-states', '@me').patch({
-      data: {
+    await this.client.rest.patch(Routes.guildVoiceState(this.guild.id, "@me"), {
+      body: {
         channel_id: this.channelId,
         request_to_speak_timestamp: request ? new Date().toISOString() : null,
-      },
-    });
+      }
+    })
   }
 
   /**
@@ -250,13 +251,13 @@ class VoiceState extends Base {
     if (this.channel?.type !== 'GUILD_STAGE_VOICE') throw new Error('VOICE_NOT_STAGE_CHANNEL');
 
     const target = this.client.user.id === this.id ? '@me' : this.id;
-
-    await this.client.api.guilds(this.guild.id, 'voice-states', target).patch({
-      data: {
+    
+    await this.client.rest.patch(Routes.guildVoiceState(this.guild.id, target), {
+      body: {
         channel_id: this.channelId,
         suppress: suppressed,
       },
-    });
+    })
   }
 
   toJSON() {

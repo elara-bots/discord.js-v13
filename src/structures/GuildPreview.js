@@ -5,6 +5,7 @@ const Base = require('./Base');
 const GuildPreviewEmoji = require('./GuildPreviewEmoji');
 const { Sticker } = require('./Sticker');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Represents the data about the guild any bot can preview, connected to the specified guild.
@@ -164,7 +165,7 @@ class GuildPreview extends Base {
    * @returns {Promise<GuildPreview>}
    */
   async fetch() {
-    const data = await this.client.api.guilds(this.id).preview.get();
+    const data = await this.client.rest.get(Routes.guildPreview(this.id));
     this._patch(data);
     return this;
   }

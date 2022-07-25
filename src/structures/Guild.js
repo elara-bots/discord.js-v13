@@ -34,6 +34,7 @@ const {
 const DataResolver = require('../util/DataResolver');
 const SystemChannelFlags = require('../util/SystemChannelFlags');
 const Util = require('../util/Util');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Represents a guild (or a server) on Discord.
@@ -582,7 +583,7 @@ class Guild extends AnonymousGuild {
    *   .catch(console.error);
    */
   async fetchIntegrations() {
-    const data = await this.client.api.guilds(this.id).integrations.get();
+    const data = await this.client.rest.get(Routes.guildIntegrations(this.id));
     return data.reduce(
       (collection, integration) => collection.set(integration.id, new Integration(this.client, integration, this)),
       new Collection(),
@@ -595,7 +596,7 @@ class Guild extends AnonymousGuild {
    * @returns {Promise<Collection<string, GuildTemplate>>}
    */
   async fetchTemplates() {
-    const templates = await this.client.api.guilds(this.id).templates.get();
+    const templates = await this.client.rest.get(Routes.guildTemplates(this.id));
     return templates.reduce((col, data) => col.set(data.code, new GuildTemplate(this.client, data)), new Collection());
   }
 
@@ -604,7 +605,7 @@ class Guild extends AnonymousGuild {
    * @returns {Promise<WelcomeScreen>}
    */
   async fetchWelcomeScreen() {
-    const data = await this.client.api.guilds(this.id, 'welcome-screen').get();
+    const data = await this.client.rest.get(Routes.guildWelcomeScreen(this.id));
     return new WelcomeScreen(this, data);
   }
 
@@ -615,7 +616,7 @@ class Guild extends AnonymousGuild {
    * @returns {Promise<GuildTemplate>}
    */
   async createTemplate(name, description) {
-    const data = await this.client.api.guilds(this.id).templates.post({ data: { name, description } });
+    const data = await this.client.rest.post(Routes.guildTemplates(this.id), { body: { name, description } });
     return new GuildTemplate(this.client, data);
   }
 
@@ -624,7 +625,7 @@ class Guild extends AnonymousGuild {
    * @returns {Promise<GuildPreview>}
    */
   async fetchPreview() {
-    const data = await this.client.api.guilds(this.id).preview.get();
+    const data = await this.client.rest.get(Routes.guildPreview(this.id));
     return new GuildPreview(this.client, data);
   }
 
@@ -651,7 +652,7 @@ class Guild extends AnonymousGuild {
     if (!this.features.includes('VANITY_URL')) {
       throw new Error('VANITY_URL');
     }
-    const data = await this.client.api.guilds(this.id, 'vanity-url').get();
+    const data = await this.client.rest.get(Routes.guildVanityUrl(this.id));
     this.vanityURLCode = data.code;
     this.vanityURLUses = data.uses;
 
@@ -668,7 +669,7 @@ class Guild extends AnonymousGuild {
    *   .catch(console.error);
    */
   async fetchWebhooks() {
-    const apiHooks = await this.client.api.guilds(this.id).webhooks.get();
+    const apiHooks = await this.client.rest.get(Routes.guildWebhooks(this.id));
     const hooks = new Collection();
     for (const hook of apiHooks) hooks.set(hook.id, new Webhook(this.client, hook));
     return hooks;
@@ -711,7 +712,7 @@ class Guild extends AnonymousGuild {
    *   .catch(console.error);
    */
   async fetchWidgetSettings() {
-    const data = await this.client.api.guilds(this.id).widget.get();
+    const data = await this.client.rest.get(Routes.guildWidgetSettings(this.id));
     this.widgetEnabled = data.enabled;
     this.widgetChannelId = data.channel_id;
     return {
@@ -743,14 +744,14 @@ class Guild extends AnonymousGuild {
     if (options.before && options.before instanceof GuildAuditLogs.Entry) options.before = options.before.id;
     if (typeof options.type === 'string') options.type = GuildAuditLogs.Actions[options.type];
 
-    const data = await this.client.api.guilds(this.id)['audit-logs'].get({
+    const data = await this.client.rest.get(Routes.guildAuditLog(this.id), {
       query: {
         before: options.before,
         limit: options.limit,
         user_id: this.client.users.resolveId(options.user),
         action_type: options.type,
       },
-    });
+    })
     return GuildAuditLogs.build(this, data);
   }
 
@@ -858,7 +859,7 @@ class Guild extends AnonymousGuild {
     }
     if (typeof data.preferredLocale !== 'undefined') _data.preferred_locale = data.preferredLocale;
     if ('premiumProgressBarEnabled' in data) _data.premium_progress_bar_enabled = data.premiumProgressBarEnabled;
-    const newData = await this.client.api.guilds(this.id).patch({ data: _data, reason });
+    const newData = await this.client.rest.patch(Routes.guild(this.id), { body: _data, reason });
     return this.client.actions.GuildUpdate.handle(newData).updated;
   }
 
@@ -922,13 +923,14 @@ class Guild extends AnonymousGuild {
       };
     });
 
-    const patchData = await this.client.api.guilds(this.id, 'welcome-screen').patch({
-      data: {
+    const patchData = await this.client.rest.patch(Routes.guildWelcomeScreen(this.id), {
+      body: {
         welcome_channels,
         description,
         enabled,
-      },
-    });
+      }
+    })
+
     return new WelcomeScreen(this, patchData);
   }
 
@@ -943,21 +945,7 @@ class Guild extends AnonymousGuild {
    */
   async leave() {
     if (this.ownerId === this.client.user.id) throw new Error('GUILD_OWNED');
-    await this.client.api.users('@me').guilds(this.id).delete();
-    return this.client.actions.GuildDelete.handle({ id: this.id }).guild;
-  }
-
-  /**
-   * Deletes the guild.
-   * @returns {Promise<Guild>}
-   * @example
-   * // Delete a guild
-   * guild.delete()
-   *   .then(g => console.log(`Deleted the guild ${g}`))
-   *   .catch(console.error);
-   */
-  async delete() {
-    await this.client.api.guilds(this.id).delete();
+    await this.client.rest.delete(Routes.userGuild(this.id));
     return this.client.actions.GuildDelete.handle({ id: this.id }).guild;
   }
 

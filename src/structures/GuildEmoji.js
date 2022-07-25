@@ -4,6 +4,7 @@ const BaseGuildEmoji = require('./BaseGuildEmoji');
 const { Error } = require('../errors');
 const GuildEmojiRoleManager = require('../managers/GuildEmojiRoleManager');
 const Permissions = require('../util/Permissions');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Represents a custom emoji.
@@ -96,16 +97,10 @@ class GuildEmoji extends BaseGuildEmoji {
    */
   async edit(data, reason) {
     const roles = data.roles?.map(r => r.id ?? r);
-    const newData = await this.client.api
-      .guilds(this.guild.id)
-      .emojis(this.id)
-      .patch({
-        data: {
-          name: data.name,
-          roles,
-        },
-        reason,
-      });
+    const newData = await this.client.rest.patch(Routes.guildEmoji(this.guild.id, this.id), {
+      body: { name, roles, },
+      reason,
+    })
     const clone = this._clone();
     clone._patch(newData);
     return clone;

@@ -5,6 +5,7 @@ const BaseGuildEmojiManager = require('./BaseGuildEmojiManager');
 const { Error, TypeError } = require('../errors');
 const DataResolver = require('../util/DataResolver');
 const Permissions = require('../util/Permissions');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Manages API methods for GuildEmojis and stores their cache.
@@ -65,8 +66,7 @@ class GuildEmojiManager extends BaseGuildEmojiManager {
         data.roles.push(resolvedRole);
       }
     }
-
-    const emoji = await this.client.api.guilds(this.guild.id).emojis.post({ data, reason });
+    const emoji = await this.client.rest.post(Routes.guildEmojis(this.guild.id), { body: data, reason });
     return this.client.actions.GuildEmojiCreate.handle(this.guild, emoji).emoji;
   }
 
@@ -92,11 +92,10 @@ class GuildEmojiManager extends BaseGuildEmojiManager {
         const existing = this.cache.get(id);
         if (existing) return existing;
       }
-      const emoji = await this.client.api.guilds(this.guild.id).emojis(id).get();
+      const emoji = await this.client.rest.get(Routes.guildEmoji(this.guild.id, id));
       return this._add(emoji, cache);
     }
-
-    const data = await this.client.api.guilds(this.guild.id).emojis.get();
+    const data = await this.client.rest.get(Routes.guildEmojis(this.guild.id));
     const emojis = new Collection();
     for (const emoji of data) emojis.set(emoji.id, this._add(emoji, cache));
     return emojis;
@@ -111,7 +110,7 @@ class GuildEmojiManager extends BaseGuildEmojiManager {
   async delete(emoji, reason) {
     const id = this.resolveId(emoji);
     if (!id) throw new TypeError('INVALID_TYPE', 'emoji', 'EmojiResolvable', true);
-    await this.client.api.guilds(this.guild.id).emojis(id).delete({ reason });
+    await this.client.rest.delete(Routes.guildEmoji(this.guild.id, id), { reason });
   }
 
   /**
@@ -125,16 +124,13 @@ class GuildEmojiManager extends BaseGuildEmojiManager {
     const id = this.resolveId(emoji);
     if (!id) throw new TypeError('INVALID_TYPE', 'emoji', 'EmojiResolvable', true);
     const roles = data.roles?.map(r => this.guild.roles.resolveId(r));
-    const newData = await this.client.api
-      .guilds(this.guild.id)
-      .emojis(id)
-      .patch({
-        data: {
-          name: data.name,
-          roles,
-        },
-        reason,
-      });
+    const newData = await this.client.rest.patch(Routes.guildEmoji(this.guild.id, id), {
+      body: {
+        name: data.name,
+        roles,
+      },
+      reason,
+    });
     const existing = this.cache.get(id);
     if (existing) {
       const clone = existing._clone();
@@ -161,8 +157,7 @@ class GuildEmojiManager extends BaseGuildEmojiManager {
     if (!me.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS)) {
       throw new Error('MISSING_MANAGE_EMOJIS_AND_STICKERS_PERMISSION', this.guild);
     }
-
-    const data = await this.client.api.guilds(this.guild.id).emojis(emoji.id).get();
+    const data = await this.client.rest.get(Routes.guildEmoji(this.guild.id, emoji.id));
     emoji._patch(data);
     return emoji.author;
   }

@@ -27,6 +27,7 @@ const Intents = require('../util/Intents');
 const Options = require('../util/Options');
 const Permissions = require('../util/Permissions');
 const Sweepers = require('../util/Sweepers');
+const { Routes } = require("discord-api-types/v9");
 
 /**
  * The main hub for interacting with the Discord API, and the starting point for any bot.
@@ -224,6 +225,8 @@ class Client extends BaseClient {
   async login(token = this.token) {
     if (!token || typeof token !== 'string') throw new Error('TOKEN_INVALID');
     this.token = token = token.replace(/^(Bot|Bearer)\s*/i, '');
+    this.rest
+      .setToken(this.token);
     this.emit(
       Events.DEBUG,
       `Provided token: ${token
@@ -292,9 +295,9 @@ class Client extends BaseClient {
    */
   async fetchInvite(invite, options) {
     const code = DataResolver.resolveInviteCode(invite);
-    const data = await this.api.invites(code).get({
-      query: { with_counts: true, with_expiration: true, guild_scheduled_event_id: options?.guildScheduledEventId },
-    });
+    const data = await this.rest.get(Routes.invite(code), {
+      query: { with_counts: true, with_expiration: true, guild_scheduled_event_id: options?.guildScheduledEventId }
+    })
     return new Invite(this, data);
   }
 
@@ -309,7 +312,7 @@ class Client extends BaseClient {
    */
   async fetchGuildTemplate(template) {
     const code = DataResolver.resolveGuildTemplateCode(template);
-    const data = await this.api.guilds.templates(code).get();
+    const data = await this.rest.get(Routes.template(code))
     return new GuildTemplate(this, data);
   }
 
@@ -324,7 +327,7 @@ class Client extends BaseClient {
    *   .catch(console.error);
    */
   async fetchWebhook(id, token) {
-    const data = await this.api.webhooks(id, token).get();
+    const data = await this.rest.get(Routes.webhook(id, token));
     return new Webhook(this, { token, ...data });
   }
 
@@ -337,7 +340,7 @@ class Client extends BaseClient {
    *   .catch(console.error);
    */
   async fetchVoiceRegions() {
-    const apiRegions = await this.api.voice.regions.get();
+    const apiRegions = await this.rest.get(Routes.voiceRegions());
     const regions = new Collection();
     for (const region of apiRegions) regions.set(region.id, new VoiceRegion(region));
     return regions;
@@ -353,7 +356,7 @@ class Client extends BaseClient {
    *   .catch(console.error);
    */
   async fetchSticker(id) {
-    const data = await this.api.stickers(id).get();
+    const data = await this.rest.get(Routes.sticker(id));
     return new Sticker(this, data);
   }
 
@@ -366,7 +369,7 @@ class Client extends BaseClient {
    *   .catch(console.error);
    */
   async fetchPremiumStickerPacks() {
-    const data = await this.api('sticker-packs').get();
+    const data = await this.rest.get(Routes.nitroStickerPacks());
     return new Collection(data.sticker_packs.map(p => [p.id, new StickerPack(this, p)]));
   }
   /**
@@ -421,7 +424,7 @@ class Client extends BaseClient {
   async fetchGuildPreview(guild) {
     const id = this.guilds.resolveId(guild);
     if (!id) throw new TypeError('INVALID_TYPE', 'guild', 'GuildResolvable');
-    const data = await this.api.guilds(id).preview.get();
+    const data = await this.rest.get(Routes.guildPreview(id));
     return new GuildPreview(this, data);
   }
 
@@ -433,7 +436,7 @@ class Client extends BaseClient {
   async fetchGuildWidget(guild) {
     const id = this.guilds.resolveId(guild);
     if (!id) throw new TypeError('INVALID_TYPE', 'guild', 'GuildResolvable');
-    const data = await this.api.guilds(id, 'widget.json').get();
+    const data = await this.rest.get(Routes.guildWidgetJSON(id));
     return new Widget(this, data);
   }
 

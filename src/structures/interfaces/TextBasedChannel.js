@@ -173,7 +173,7 @@ class TextBasedChannel {
     }
 
     const { data, files } = await messagePayload.resolveFiles();
-    const d = await this.client.api.channels[this.id].messages.post({ data, files });
+    const d = await this.client.rest.post(Routes.channelMessages(this.id), { body: data, files });
 
     return this.messages.cache.get(d.id) ?? this.messages._add(d);
   }
@@ -186,7 +186,7 @@ class TextBasedChannel {
    * channel.sendTyping();
    */
   async sendTyping() {
-    await this.client.api.channels(this.id).typing.post();
+    await this.client.rest.post(Routes.channelTyping(this.id));
   }
 
   /**
@@ -299,7 +299,7 @@ class TextBasedChannel {
       }
       if (messageIds.length === 0) return new Collection();
       if (messageIds.length === 1) {
-        await this.client.api.channels(this.id).messages(messageIds[0]).delete();
+        await this.client.rest.delete(Routes.channelMessage(this.id, messageIds[0]));
         const message = this.client.actions.MessageDelete.getMessage(
           {
             message_id: messageIds[0],
@@ -308,7 +308,7 @@ class TextBasedChannel {
         );
         return message ? new Collection([[message.id, message]]) : new Collection();
       }
-      await this.client.api.channels[this.id].messages['bulk-delete'].post({ data: { messages: messageIds } });
+      await this.client.rest.post(Routes.channelBulkDelete(this.id), { body: { messages: messageIds } });
       return messageIds.reduce(
         (col, id) =>
           col.set(
@@ -398,4 +398,5 @@ class TextBasedChannel {
 module.exports = TextBasedChannel;
 
 // Fixes Circular
-const MessageManager = require('../../managers/MessageManager');
+const MessageManager = require('../../managers/MessageManager');const { Routes } = require('discord-api-types/v9');
+

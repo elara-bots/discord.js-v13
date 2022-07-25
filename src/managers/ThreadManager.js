@@ -6,6 +6,7 @@ const { TypeError } = require('../errors');
 const ThreadChannel = require('../structures/ThreadChannel');
 const { ChannelTypes } = require('../util/Constants');
 const { resolveAutoArchiveMaxLimit } = require('../util/Util');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Manages API methods for {@link ThreadChannel} objects and stores their cache.
@@ -108,7 +109,7 @@ class ThreadManager extends CachedManager {
     reason,
     rateLimitPerUser,
   } = {}) {
-    let path = this.client.api.channels(this.channel.id);
+    let path = Routes.threads(this.channel.id);
     if (type && typeof type !== 'string' && typeof type !== 'number') {
       throw new TypeError('INVALID_TYPE', 'type', 'ThreadChannelType or Number');
     }
@@ -117,15 +118,15 @@ class ThreadManager extends CachedManager {
     if (startMessage) {
       const startMessageId = this.channel.messages.resolveId(startMessage);
       if (!startMessageId) throw new TypeError('INVALID_TYPE', 'startMessage', 'MessageResolvable');
-      path = path.messages(startMessageId);
+      path = Routes.threads(this.channel.id, startMessageId);
     } else if (this.channel.type !== 'GUILD_NEWS') {
       resolvedType = typeof type === 'string' ? ChannelTypes[type] : type ?? resolvedType;
     }
 
     if (autoArchiveDuration === 'MAX') autoArchiveDuration = resolveAutoArchiveMaxLimit(this.channel.guild);
 
-    const data = await path.threads.post({
-      data: {
+    const data = await this.client.rest.post(path, {
+      body: {
         name,
         auto_archive_duration: autoArchiveDuration,
         type: resolvedType,
@@ -133,7 +134,7 @@ class ThreadManager extends CachedManager {
         rate_limit_per_user: rateLimitPerUser,
       },
       reason,
-    });
+    })
 
     return this.client.actions.ThreadCreate.handle(data).thread;
   }
@@ -201,9 +202,9 @@ class ThreadManager extends CachedManager {
    * @returns {Promise<FetchedThreads>}
    */
   async fetchArchived({ type = 'public', fetchAll = false, before, limit } = {}, cache = true) {
-    let path = this.client.api.channels(this.channel.id);
+    let path = Routes.channelThreads(this.channel.id, type);
     if (type === 'private' && !fetchAll) {
-      path = path.users('@me');
+      path = Routes.channelJoinedArchivedThreads(this.channel.id);
     }
     let timestamp;
     let id;
@@ -219,9 +220,9 @@ class ThreadManager extends CachedManager {
         }
       }
     }
-    const raw = await path.threads
-      .archived(type)
-      .get({ query: { before: type === 'private' && !fetchAll ? id : timestamp, limit } });
+    const raw = await this.client.rest.get(path, {
+      query: { before: type === 'private' && !fetchAll ? id : timestamp, limit }
+    })
     return this.constructor._mapThreads(raw, this.client, { parent: this.channel, cache });
   }
 
@@ -231,7 +232,7 @@ class ThreadManager extends CachedManager {
    * @returns {Promise<FetchedThreads>}
    */
   async fetchActive(cache = true) {
-    const raw = await this.client.api.guilds(this.channel.guild.id).threads.active.get();
+    const raw = await this.client.rest.get(Routes.guildActiveThreads(this.channel.guild.id));
     return this.constructor._mapThreads(raw, this.client, { parent: this.channel, cache });
   }
 

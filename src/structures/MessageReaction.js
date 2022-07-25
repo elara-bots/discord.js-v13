@@ -4,6 +4,7 @@ const GuildEmoji = require('./GuildEmoji');
 const ReactionEmoji = require('./ReactionEmoji');
 const ReactionUserManager = require('../managers/ReactionUserManager');
 const Util = require('../util/Util');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Represents a reaction to a message.
@@ -56,11 +57,13 @@ class MessageReaction {
    * @returns {Promise<MessageReaction>}
    */
   async remove() {
-    await this.client.api
-      .channels(this.message.channelId)
-      .messages(this.message.id)
-      .reactions(this._emoji.identifier)
-      .delete();
+    await this.client.rest.delete(
+      Routes.channelMessageReaction(
+        this.message.channelId,
+        this.message.id,
+        this._emoji.identifier
+      )
+    )
     return this;
   }
 

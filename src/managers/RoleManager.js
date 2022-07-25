@@ -9,6 +9,7 @@ const DataResolver = require('../util/DataResolver');
 const Permissions = require('../util/Permissions');
 const { resolveColor } = require('../util/Util');
 const Util = require('../util/Util');
+const { Routes } = require('discord-api-types/v9');
 
 let cacheWarningEmitted = false;
 
@@ -66,8 +67,7 @@ class RoleManager extends CachedManager {
       if (existing) return existing;
     }
 
-    // We cannot fetch a single role, as of this commit's date, Discord API throws with 405
-    const data = await this.client.api.guilds(this.guild.id).roles.get();
+    const data = await this.client.rest.get(Routes.guildRoles(this.guild.id));
     const roles = new Collection();
     for (const role of data) roles.set(role.id, this._add(role, cache));
     return id ? roles.get(id) ?? null : roles;
@@ -144,8 +144,8 @@ class RoleManager extends CachedManager {
       if (typeof icon !== 'string') icon = undefined;
     }
 
-    const data = await this.client.api.guilds(this.guild.id).roles.post({
-      data: {
+    const data = await this.client.rest.post(Routes.guildRoles(this.guild.id), {
+      body: {
         name,
         color,
         hoist,
@@ -154,8 +154,8 @@ class RoleManager extends CachedManager {
         icon,
         unicode_emoji: unicodeEmoji,
       },
-      reason,
-    });
+      reason
+    })
     const { role } = this.client.actions.GuildRoleCreate.handle({
       guild_id: this.guild.id,
       role: data,
@@ -199,8 +199,7 @@ class RoleManager extends CachedManager {
       unicode_emoji: data.unicodeEmoji,
     };
 
-    const d = await this.client.api.guilds(this.guild.id).roles(role.id).patch({ data: _data, reason });
-
+    const d = await this.client.rest.patch(Routes.guildRole(this.guild.id, role.id), { body: _data, reason });
     const clone = role._clone();
     clone._patch(d);
     return clone;
@@ -219,11 +218,12 @@ class RoleManager extends CachedManager {
    */
   async delete(role, reason) {
     const id = this.resolveId(role);
-    await this.client.api.guilds[this.guild.id].roles[id].delete({ reason });
+    await this.client.rest.delete(Routes.guildRole(this.guild.id, id), { reason });
     this.client.actions.GuildRoleDelete.handle({ guild_id: this.guild.id, role_id: id });
   }
 
   /**
+   * TODO: Remove this, if it's not needed.
    * Sets the new position of the role.
    * @param {RoleResolvable} role The role to change the position of
    * @param {number} position The new position for the role
@@ -262,6 +262,7 @@ class RoleManager extends CachedManager {
    */
 
   /**
+   * TODO: Remove this, if it's not needed.
    * Batch-updates the guild's role positions
    * @param {GuildRolePosition[]} rolePositions Role positions to update
    * @returns {Promise<Guild>}

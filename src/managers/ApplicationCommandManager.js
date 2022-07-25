@@ -8,6 +8,7 @@ const { TypeError } = require('../errors');
 const ApplicationCommand = require('../structures/ApplicationCommand');
 const { ApplicationCommandTypes } = require('../util/Constants');
 const Permissions = require('../util/Permissions');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Manages API methods for application commands and stores their cache.
@@ -43,9 +44,9 @@ class ApplicationCommandManager extends CachedManager {
    * @private
    */
   commandPath({ id, guildId } = {}) {
-    let path = this.client.api.applications(this.client.application.id);
-    if (this.guild ?? guildId) path = path.guilds(this.guild?.id ?? guildId);
-    return id ? path.commands(id) : path.commands;
+    let path = Routes.applicationCommands(id);
+    if (this.guild ?? guildId) path = Routes.applicationGuildCommands(id, this.guild?.id ?? guildId);
+    return path;
   }
 
   /**

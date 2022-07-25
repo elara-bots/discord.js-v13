@@ -1,5 +1,6 @@
 'use strict';
 
+const { Routes } = require('discord-api-types/v9');
 const { ClientApplicationAssetTypes, Endpoints } = require('../../util/Constants');
 const SnowflakeUtil = require('../../util/SnowflakeUtil');
 const Base = require('../Base');
@@ -104,7 +105,7 @@ class Application extends Base {
    * @returns {Promise<Array<ApplicationAsset>>}
    */
   async fetchAssets() {
-    const assets = await this.client.api.oauth2.applications(this.id).assets.get();
+    const assets = await this.client.rest.get(`/oauth2/applications/${this.id}/assets`);
     return assets.map(a => ({
       id: a.id,
       name: a.name,

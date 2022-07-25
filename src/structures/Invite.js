@@ -7,6 +7,7 @@ const InviteStageInstance = require('./InviteStageInstance');
 const { Error } = require('../errors');
 const { Endpoints } = require('../util/Constants');
 const Permissions = require('../util/Permissions');
+const { Routes } = require('discord-api-types/v9');
 
 // TODO: Convert `inviter` and `channel` in this class to a getter.
 
@@ -285,7 +286,7 @@ class Invite extends Base {
    * @returns {Promise<Invite>}
    */
   async delete(reason) {
-    await this.client.api.invites[this.code].delete({ reason });
+    await this.client.rest.delete(Routes.invite(this.code), { reason });
     return this;
   }
 

@@ -13,6 +13,7 @@ const { ThreadChannelTypes, ChannelTypes, VideoQualityModes } = require('../util
 const DataResolver = require('../util/DataResolver');
 const Util = require('../util/Util');
 const { resolveAutoArchiveMaxLimit } = require('../util/Util');
+const { Routes } = require('discord-api-types/v9');
 
 let cacheWarningEmitted = false;
 
@@ -143,9 +144,8 @@ class GuildChannelManager extends CachedManager {
     parent &&= this.client.channels.resolveId(parent);
     permissionOverwrites &&= permissionOverwrites.map(o => PermissionOverwrites.resolve(o, this.guild));
     const intType = typeof type === 'number' ? type : ChannelTypes[type] ?? ChannelTypes.GUILD_TEXT;
-
-    const data = await this.client.api.guilds(this.guild.id).channels.post({
-      data: {
+    const data = await this.client.rest.post(Routes.guildChannels(this.guild.id), {
+      body: {
         name,
         topic,
         type: intType,
@@ -184,8 +184,8 @@ class GuildChannelManager extends CachedManager {
     if (typeof avatar === 'string' && !avatar.startsWith('data:')) {
       avatar = await DataResolver.resolveImage(avatar);
     }
-    const data = await this.client.api.channels[id].webhooks.post({
-      data: {
+    const data = await this.client.rest.post(Routes.channelWebhooks(id), {
+      body: {
         name,
         avatar,
       },
@@ -256,8 +256,8 @@ class GuildChannelManager extends CachedManager {
     let defaultAutoArchiveDuration = data.defaultAutoArchiveDuration;
     if (defaultAutoArchiveDuration === 'MAX') defaultAutoArchiveDuration = resolveAutoArchiveMaxLimit(this.guild);
 
-    const newData = await this.client.api.channels(channel.id).patch({
-      data: {
+    const newData = await this.client.rest.patch(Routes.channel(id), {
+      body: {
         name: (data.name ?? channel.name).trim(),
         type: data.type,
         topic: data.topic,
@@ -280,6 +280,7 @@ class GuildChannelManager extends CachedManager {
   }
 
   /**
+   * TODO: Remove this, if it's not needed.
    * Sets a new position for the guild channel.
    * @param {GuildChannelResolvable} channel The channel to set the position for
    * @param {number} position The new position for the guild channel
@@ -333,13 +334,13 @@ class GuildChannelManager extends CachedManager {
     }
 
     if (id) {
-      const data = await this.client.api.channels(id).get();
+      const data = await this.client.rest.get(Routes.channel(id));
       // Since this is the guild manager, throw if on a different guild
       if (this.guild.id !== data.guild_id) throw new Error('GUILD_CHANNEL_UNOWNED');
       return this.client.channels._add(data, this.guild, { cache });
     }
 
-    const data = await this.client.api.guilds(this.guild.id).channels.get();
+    const data = await this.client.rest.get(Routes.guildChannels(this.guild.id));
     const channels = new Collection();
     for (const channel of data) channels.set(channel.id, this.client.channels._add(channel, this.guild, { cache }));
     return channels;
@@ -358,7 +359,7 @@ class GuildChannelManager extends CachedManager {
   async fetchWebhooks(channel) {
     const id = this.resolveId(channel);
     if (!id) throw new TypeError('INVALID_TYPE', 'channel', 'GuildChannelResolvable');
-    const data = await this.client.api.channels[id].webhooks.get();
+    const data = await this.client.rest.get(Routes.channelWebhooks(id));
     return data.reduce((hooks, hook) => hooks.set(hook.id, new Webhook(this.client, hook)), new Collection());
   }
 
@@ -379,6 +380,7 @@ class GuildChannelManager extends CachedManager {
    */
 
   /**
+   * TODO: Remove this, if it's not needed.
    * Batch-updates the guild's channels' positions.
    * <info>Only one channel's parent can be changed at a time</info>
    * @param {ChannelPosition[]} channelPositions Channel positions to update
@@ -395,8 +397,7 @@ class GuildChannelManager extends CachedManager {
       lock_permissions: r.lockPermissions,
       parent_id: typeof r.parent !== 'undefined' ? this.resolveId(r.parent) : undefined,
     }));
-
-    await this.client.api.guilds(this.guild.id).channels.patch({ data: channelPositions });
+    await this.client.rest.patch(Routes.guildChannels(this.guild.id), { body: channelPositions });
     return this.client.actions.GuildChannelsPositionUpdate.handle({
       guild_id: this.guild.id,
       channels: channelPositions,
@@ -414,7 +415,7 @@ class GuildChannelManager extends CachedManager {
    *   .catch(console.error);
    */
   async fetchActiveThreads(cache = true) {
-    const raw = await this.client.api.guilds(this.guild.id).threads.active.get();
+    const raw = await this.client.rest.get(Routes.guildActiveThreads(this.guild.id));
     return ThreadManager._mapThreads(raw, this.client, { guild: this.guild, cache });
   }
 
@@ -432,7 +433,7 @@ class GuildChannelManager extends CachedManager {
   async delete(channel, reason) {
     const id = this.resolveId(channel);
     if (!id) throw new TypeError('INVALID_TYPE', 'channel', 'GuildChannelResolvable');
-    await this.client.api.channels(id).delete({ reason });
+    await this.client.rest.delete(Routes.channel(id), { reason });
   }
 }
 

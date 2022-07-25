@@ -2,6 +2,7 @@
 const Base = require('./Base');
 const { StickerFormatTypes, StickerTypes } = require('../util/Constants');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Represents a Sticker.
@@ -168,7 +169,7 @@ class Sticker extends Base {
    * @returns {Promise<Sticker>}
    */
   async fetch() {
-    const data = await this.client.api.stickers(this.id).get();
+    const data = await this.client.rest.get(Routes.sticker(this.id));
     this._patch(data);
     return this;
   }

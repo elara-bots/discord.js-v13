@@ -4,6 +4,7 @@ const { Collection } = require('@discordjs/collection');
 const BaseManager = require('./BaseManager');
 const { Error, TypeError } = require('../errors');
 const { ApplicationCommandPermissionTypes, APIErrors } = require('../util/Constants');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Manages API methods for permissions of Application Commands.
@@ -47,7 +48,7 @@ class ApplicationCommandPermissionsManager extends BaseManager {
    * @private
    */
   permissionsPath(guildId, commandId) {
-    return this.client.api.applications(this.client.application.id).guilds(guildId).commands(commandId).permissions;
+    return Routes.applicationCommandPermissions(this.client.application.id, guildId, commandId);
   }
 
   /**

@@ -5,6 +5,7 @@ const CachedManager = require('./CachedManager');
 const { TypeError, Error } = require('../errors');
 const GuildBan = require('../structures/GuildBan');
 const { GuildMember } = require('../structures/GuildMember');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Manages API methods for GuildBans and stores their cache.
@@ -110,13 +111,12 @@ class GuildBanManager extends CachedManager {
       const existing = this.cache.get(user);
       if (existing && !existing.partial) return existing;
     }
-
-    const data = await this.client.api.guilds(this.guild.id).bans(user).get();
+    const data = await this.client.rest.get(Routes.guildBan(this.guild.id, user));
     return this._add(data, cache);
   }
 
   async _fetchMany(options = {}) {
-    const data = await this.client.api.guilds(this.guild.id).bans.get({
+    const data = await this.client.rest.get(Routes.guildBans(this.guild.id), {
       query: options,
     });
 
@@ -146,13 +146,12 @@ class GuildBanManager extends CachedManager {
     if (typeof options !== 'object') throw new TypeError('INVALID_TYPE', 'options', 'object', true);
     const id = this.client.users.resolveId(user);
     if (!id) throw new Error('BAN_RESOLVE_ID', true);
-    await this.client.api
-      .guilds(this.guild.id)
-      .bans(id)
-      .put({
-        data: { delete_message_days: options.days },
-        reason: options.reason,
-      });
+
+    await this.client.rest.put(Routes.guildBan(this.guild.id, id), {
+      body: { delete_message_days: options.days },
+      reason: options.reason
+    });
+
     if (user instanceof GuildMember) return user;
     const _user = this.client.users.resolve(id);
     if (_user) {
@@ -175,7 +174,7 @@ class GuildBanManager extends CachedManager {
   async remove(user, reason) {
     const id = this.client.users.resolveId(user);
     if (!id) throw new Error('BAN_RESOLVE_ID');
-    await this.client.api.guilds(this.guild.id).bans(id).delete({ reason });
+    await this.client.rest.delete(Routes.guildBan(this.guild.id, id), { reason });
     return this.client.users.resolve(user);
   }
 }

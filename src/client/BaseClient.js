@@ -1,7 +1,7 @@
 'use strict';
 
 const EventEmitter = require('node:events');
-const RESTManager = require('../rest/RESTManager');
+const { REST } = require("@discordjs/rest");
 const Options = require('../util/Options');
 const Util = require('../util/Util');
 
@@ -21,20 +21,29 @@ class BaseClient extends EventEmitter {
 
     /**
      * The REST manager of the client
-     * @type {RESTManager}
+     * @type {REST}
      * @private
      */
-    this.rest = new RESTManager(this);
+    this.rest = new REST({
+      offset: this.options.restTimeOffset,
+      timeout: this.options.restRequestTimeout,
+      globalRequestsPerSecond: this.options.restGlobalRateLimit,
+      handlerSweepInterval: this.options.restSweepInterval,
+      retries: this.options.retryLimit,
+      cdn: this.options.http?.cdn,
+      headers: this.options.http?.headers,
+      version: this.options.http?.version,
+      agent: this.options.http?.agent,
+      api: this.options.http?.api,
+      invalidRequestWarningInterval: this.options.invalidRequestWarningInterval,
+      userAgentAppendix: this.options.userAgentSuffix,
+      rejectOnRateLimit: this.options.rejectOnRateLimit
+    });
   }
 
-  /**
-   * API shortcut
-   * @type {Object}
-   * @readonly
-   * @private
-   */
+
   get api() {
-    return this.rest.api;
+    return this.rest;
   }
 
   /**
@@ -42,7 +51,8 @@ class BaseClient extends EventEmitter {
    * @returns {void}
    */
   destroy() {
-    if (this.rest.sweepInterval) clearInterval(this.rest.sweepInterval);
+    this.rest.requestManager.clearHashSweeper();
+    this.rest.requestManager.clearHandlerSweeper();
   }
 
   /**

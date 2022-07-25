@@ -1,5 +1,6 @@
 'use strict';
 
+const { Routes } = require('discord-api-types/v9');
 const { Error } = require('../../errors');
 const { InteractionResponseTypes, InteractionTypes } = require('../../util/Constants');
 const MessageFlags = require('../../util/MessageFlags');
@@ -58,15 +59,15 @@ class InteractionResponses {
   async deferReply(options = {}) {
     if (this.deferred || this.replied) throw new Error('INTERACTION_ALREADY_REPLIED');
     this.ephemeral = options.ephemeral ?? false;
-    await this.client.api.interactions(this.id, this.token).callback.post({
-      data: {
+    await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
+      body: {
         type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
           flags: options.ephemeral ? MessageFlags.FLAGS.EPHEMERAL : undefined,
         },
       },
-      auth: false,
-    });
+      auth: false
+    })
     this.deferred = true;
 
     return options.fetchReply ? this.fetchReply() : undefined;
@@ -100,8 +101,8 @@ class InteractionResponses {
 
     const { data, files } = await messagePayload.resolveData().resolveFiles();
 
-    await this.client.api.interactions(this.id, this.token).callback.post({
-      data: {
+    await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
+      body: {
         type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE,
         data,
       },
@@ -182,11 +183,11 @@ class InteractionResponses {
    */
   async deferUpdate(options = {}) {
     if (this.deferred || this.replied) throw new Error('INTERACTION_ALREADY_REPLIED');
-    await this.client.api.interactions(this.id, this.token).callback.post({
-      data: {
+    await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
+      body: {
         type: InteractionResponseTypes.DEFERRED_MESSAGE_UPDATE,
       },
-      auth: false,
+      auth: false
     });
     this.deferred = true;
 
@@ -215,14 +216,14 @@ class InteractionResponses {
 
     const { data, files } = await messagePayload.resolveData().resolveFiles();
 
-    await this.client.api.interactions(this.id, this.token).callback.post({
-      data: {
+    await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
+      body: {
         type: InteractionResponseTypes.UPDATE_MESSAGE,
         data,
       },
       files,
-      auth: false,
-    });
+      auth: false
+    })
     this.replied = true;
 
     return options.fetchReply ? this.fetchReply() : undefined;
@@ -237,12 +238,12 @@ class InteractionResponses {
     if (this.deferred || this.replied) throw new Error('INTERACTION_ALREADY_REPLIED');
 
     const _modal = modal instanceof Modal ? modal : new Modal(modal);
-    await this.client.api.interactions(this.id, this.token).callback.post({
-      data: {
+    await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
+      body: {
         type: InteractionResponseTypes.MODAL,
         data: _modal.toJSON(),
-      },
-    });
+      }
+    })
     this.replied = true;
   }
 

@@ -4,6 +4,7 @@ const { Collection } = require('@discordjs/collection');
 const DataManager = require('./DataManager');
 const { TypeError } = require('../errors');
 const { Role } = require('../structures/Role');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Manages API methods for roles of a GuildMember and stores their cache.
@@ -120,8 +121,7 @@ class GuildMemberRoleManager extends DataManager {
       if (roleOrRoles === null) {
         throw new TypeError('INVALID_TYPE', 'roles', 'Role, Snowflake or Array or Collection of Roles or Snowflakes');
       }
-
-      await this.client.api.guilds[this.guild.id].members[this.member.id].roles[roleOrRoles].put({ reason });
+      await this.client.rest.put(Routes.guildMemberRole(this.guild.id, this.member.id, roleOrRoles), { reason });
 
       const clone = this.member._clone();
       clone._roles = [...this.cache.keys(), roleOrRoles];
@@ -151,8 +151,7 @@ class GuildMemberRoleManager extends DataManager {
       if (roleOrRoles === null) {
         throw new TypeError('INVALID_TYPE', 'roles', 'Role, Snowflake or Array or Collection of Roles or Snowflakes');
       }
-
-      await this.client.api.guilds[this.guild.id].members[this.member.id].roles[roleOrRoles].delete({ reason });
+      await this.client.rest.delete(Routes.guildMemberRole(this.guild.id, this.member.id, roleOrRoles), { reason });
 
       const clone = this.member._clone();
       const newRoles = this.cache.filter(role => role.id !== roleOrRoles);
