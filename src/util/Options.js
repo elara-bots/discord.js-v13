@@ -1,6 +1,7 @@
 'use strict';
 
 const process = require('node:process');
+const { DefaultRestOptions } = require("@discordjs/rest");
 
 /**
  * Rate limit data
@@ -154,10 +155,10 @@ class Options extends null {
         version: 9,
       },
       http: {
-        agent: {},
-        version: 9,
-        api: 'https://discord.com/api',
-        cdn: 'https://cdn.discordapp.com',
+        agent: DefaultRestOptions.agent,
+        version: DefaultRestOptions.version,
+        api: DefaultRestOptions.api,
+        cdn: DefaultRestOptions.cdn,
         invite: 'https://discord.gg',
         template: 'https://discord.new',
         scheduledEvent: 'https://discord.com/events',
