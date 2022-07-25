@@ -225,8 +225,7 @@ class Client extends BaseClient {
   async login(token = this.token) {
     if (!token || typeof token !== 'string') throw new Error('TOKEN_INVALID');
     this.token = token = token.replace(/^(Bot|Bearer)\s*/i, '');
-    this.rest
-      .setToken(this.token);
+    this.rest.setToken(token);
     this.emit(
       Events.DEBUG,
       `Provided token: ${token
@@ -274,6 +273,7 @@ class Client extends BaseClient {
     this.sweepers.destroy();
     this.ws.destroy();
     this.token = null;
+    this.rest.setToken(null);
   }
 
   /**
