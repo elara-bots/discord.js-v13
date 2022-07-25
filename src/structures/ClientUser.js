@@ -62,36 +62,6 @@ class ClientUser extends User {
   }
 
   /**
-   * Sets the username of the logged in client.
-   * <info>Changing usernames in Discord is heavily rate limited, with only 2 requests
-   * every hour. Use this sparingly!</info>
-   * @param {string} username The new username
-   * @returns {Promise<ClientUser>}
-   * @example
-   * // Set username
-   * client.user.setUsername('discordjs')
-   *   .then(user => console.log(`My new username is ${user.username}`))
-   *   .catch(console.error);
-   */
-  setUsername(username) {
-    return this.edit({ username });
-  }
-
-  /**
-   * Sets the avatar of the logged in client.
-   * @param {?(BufferResolvable|Base64Resolvable)} avatar The new avatar
-   * @returns {Promise<ClientUser>}
-   * @example
-   * // Set avatar
-   * client.user.setAvatar('./avatar.png')
-   *   .then(user => console.log(`New avatar set!`))
-   *   .catch(console.error);
-   */
-  setAvatar(avatar) {
-    return this.edit({ avatar });
-  }
-
-  /**
    * Options for setting activities
    * @typedef {Object} ActivitiesOptions
    * @property {string} [name] Name of the activity
@@ -121,28 +91,6 @@ class ClientUser extends User {
   }
 
   /**
-   * A user's status. Must be one of:
-   * * `online`
-   * * `idle`
-   * * `invisible`
-   * * `dnd` (do not disturb)
-   * @typedef {string} PresenceStatusData
-   */
-
-  /**
-   * Sets the status of the client user.
-   * @param {PresenceStatusData} status Status to change to
-   * @param {number|number[]} [shardId] Shard id(s) to have the activity set on
-   * @returns {ClientPresence}
-   * @example
-   * // Set the client user's status
-   * client.user.setStatus('idle');
-   */
-  setStatus(status, shardId) {
-    return this.setPresence({ status, shardId });
-  }
-
-  /**
    * Options for setting an activity.
    * @typedef {Object} ActivityOptions
    * @property {string} [name] Name of the activity
@@ -167,15 +115,6 @@ class ClientUser extends User {
     return this.setPresence({ activities: [activity], shardId: activity.shardId });
   }
 
-  /**
-   * Sets/removes the AFK flag for the client user.
-   * @param {boolean} [afk=true] Whether or not the user is AFK
-   * @param {number|number[]} [shardId] Shard Id(s) to have the AFK flag set on
-   * @returns {ClientPresence}
-   */
-  setAFK(afk = true, shardId) {
-    return this.setPresence({ afk, shardId });
-  }
 }
 
 module.exports = ClientUser;

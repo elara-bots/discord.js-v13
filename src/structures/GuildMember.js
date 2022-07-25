@@ -300,16 +300,6 @@ class GuildMember extends Base {
   }
 
   /**
-   * Sets the nickname for this member.
-   * @param {?string} nick The nickname for the guild member, or `null` if you want to reset their nickname
-   * @param {string} [reason] Reason for setting the nickname
-   * @returns {Promise<GuildMember>}
-   */
-  setNickname(nick, reason) {
-    return this.edit({ nick }, reason);
-  }
-
-  /**
    * Creates a DM channel between the client and this member.
    * @param {boolean} [force=false] Whether to skip the cache check and request the API
    * @returns {Promise<DMChannel>}

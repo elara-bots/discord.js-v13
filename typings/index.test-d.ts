@@ -498,10 +498,6 @@ client.on('guildCreate', async g => {
     expectType<Collection<Snowflake, ThreadMember>>(fetchedMemberCol);
   }
 
-  channel.setName('foo').then(updatedChannel => {
-    console.log(`New channel name: ${updatedChannel.name}`);
-  });
-
   // @ts-expect-error no options
   expectNotType<Promise<GuildMember>>(g.members.add(testUserId));
 

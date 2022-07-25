@@ -17,17 +17,6 @@ class CategoryChannel extends GuildChannel {
   }
 
   /**
-   * Sets the category parent of this channel.
-   * <warn>It is not currently possible to set the parent of a CategoryChannel.</warn>
-   * @method setParent
-   * @memberof CategoryChannel
-   * @instance
-   * @param {?CategoryChannelResolvable} channel The channel to set as parent
-   * @param {SetParentOptions} [options={}] The options for setting the parent
-   * @returns {Promise<GuildChannel>}
-   */
-
-  /**
    * Options for creating a channel using {@link CategoryChannel#createChannel}.
    * @typedef {Object} CategoryCreateChannelOptions
    * @property {ChannelType|number} [type='GUILD_TEXT'] The type of the new channel.

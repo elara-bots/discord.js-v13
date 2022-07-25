@@ -80,41 +80,6 @@ class BaseGuildTextChannel extends GuildChannel {
   }
 
   /**
-   * Sets the default auto archive duration for all newly created threads in this channel.
-   * @param {ThreadAutoArchiveDuration} defaultAutoArchiveDuration The new default auto archive duration
-   * @param {string} [reason] Reason for changing the channel's default auto archive duration
-   * @returns {Promise<TextChannel>}
-   */
-  setDefaultAutoArchiveDuration(defaultAutoArchiveDuration, reason) {
-    return this.edit({ defaultAutoArchiveDuration }, reason);
-  }
-
-  /**
-   * Sets the type of this channel (only conversion between text and news is supported)
-   * @param {string} type The new channel type
-   * @param {string} [reason] Reason for changing the channel's type
-   * @returns {Promise<GuildChannel>}
-   */
-  setType(type, reason) {
-    return this.edit({ type }, reason);
-  }
-
-  /**
-   * Sets a new topic for the guild channel.
-   * @param {?string} topic The new topic for the guild channel
-   * @param {string} [reason] Reason for changing the guild channel's topic
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * // Set a new channel topic
-   * channel.setTopic('needs more rate limiting')
-   *   .then(newChannel => console.log(`Channel's new topic is ${newChannel.topic}`))
-   *   .catch(console.error);
-   */
-  setTopic(topic, reason) {
-    return this.edit({ topic }, reason);
-  }
-
-  /**
    * Data that can be resolved to an Application. This can be:
    * * An Application
    * * An Activity with associated Application
@@ -175,8 +140,6 @@ class BaseGuildTextChannel extends GuildChannel {
   bulkDelete() {}
   fetchWebhooks() {}
   createWebhook() {}
-  setRateLimitPerUser() {}
-  setNSFW() {}
 }
 
 TextBasedChannel.applyToClass(BaseGuildTextChannel, true);

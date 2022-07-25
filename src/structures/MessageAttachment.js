@@ -21,56 +21,6 @@ class MessageAttachment {
     if (data) this._patch(data);
   }
 
-  /**
-   * Sets the description of this attachment.
-   * @param {string} description The description of the file
-   * @returns {MessageAttachment} This attachment
-   */
-  setDescription(description) {
-    this.description = description;
-    return this;
-  }
-
-  /**
-   * Sets the file of this attachment.
-   * @param {BufferResolvable|Stream} attachment The file
-   * @param {string} [name=null] The name of the file, if any
-   * @returns {MessageAttachment} This attachment
-   */
-  setFile(attachment, name = null) {
-    this.attachment = attachment;
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Sets the name of this attachment.
-   * @param {string} name The name of the file
-   * @returns {MessageAttachment} This attachment
-   */
-  setName(name) {
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Sets whether this attachment is a spoiler
-   * @param {boolean} [spoiler=true] Whether the attachment should be marked as a spoiler
-   * @returns {MessageAttachment} This attachment
-   */
-  setSpoiler(spoiler = true) {
-    if (spoiler === this.spoiler) return this;
-
-    if (!spoiler) {
-      while (this.spoiler) {
-        this.name = this.name.slice('SPOILER_'.length);
-      }
-      return this;
-    }
-    this.name = `SPOILER_${this.name}`;
-    return this;
-  }
-
   _patch(data) {
     /**
      * The attachment's id

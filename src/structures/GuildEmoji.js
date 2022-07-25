@@ -112,16 +112,6 @@ class GuildEmoji extends BaseGuildEmoji {
   }
 
   /**
-   * Sets the name of the emoji.
-   * @param {string} name The new name for the emoji
-   * @param {string} [reason] Reason for changing the emoji's name
-   * @returns {Promise<GuildEmoji>}
-   */
-  setName(name, reason) {
-    return this.edit({ name }, reason);
-  }
-
-  /**
    * Deletes the emoji.
    * @param {string} [reason] Reason for deleting the emoji
    * @returns {Promise<GuildEmoji>}

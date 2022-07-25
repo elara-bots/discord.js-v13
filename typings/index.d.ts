@@ -250,12 +250,6 @@ export class ApplicationCommand<PermissionsFetchType = {}> extends Base {
   public version: Snowflake;
   public delete(): Promise<ApplicationCommand<PermissionsFetchType>>;
   public edit(data: Partial<ApplicationCommandData>): Promise<ApplicationCommand<PermissionsFetchType>>;
-  public setName(name: string): Promise<ApplicationCommand<PermissionsFetchType>>;
-  public setNameLocalizations(nameLocalizations: LocalizationMap): Promise<ApplicationCommand<PermissionsFetchType>>;
-  public setDescription(description: string): Promise<ApplicationCommand<PermissionsFetchType>>;
-  public setDescriptionLocalizations(
-    descriptionLocalizations: LocalizationMap,
-  ): Promise<ApplicationCommand<PermissionsFetchType>>;
   public setDefaultMemberPermissions(
     defaultMemberPermissions: PermissionResolvable | null,
   ): Promise<ApplicationCommand<PermissionsFetchType>>;
@@ -419,8 +413,6 @@ export abstract class BaseGuild extends Base {
   public id: Snowflake;
   public name: string;
   public readonly nameAcronym: string;
-  public readonly partnered: boolean;
-  public readonly verified: boolean;
   public fetch(): Promise<Guild>;
   public iconURL(options?: ImageURLOptions): string | null;
   public toString(): string;
@@ -446,13 +438,6 @@ export class BaseGuildTextChannel extends TextBasedChannelMixin(GuildChannel) {
   public topic: string | null;
   public createInvite(options?: CreateInviteOptions): Promise<Invite>;
   public fetchInvites(cache?: boolean): Promise<Collection<string, Invite>>;
-  public setDefaultAutoArchiveDuration(
-    defaultAutoArchiveDuration: ThreadAutoArchiveDuration | 'MAX',
-    reason?: string,
-  ): Promise<this>;
-  public setTopic(topic: string | null, reason?: string): Promise<this>;
-  public setType(type: Pick<typeof ChannelTypes, 'GUILD_TEXT'>, reason?: string): Promise<TextChannel>;
-  public setType(type: Pick<typeof ChannelTypes, 'GUILD_NEWS'>, reason?: string): Promise<NewsChannel>;
 }
 
 export class BaseGuildVoiceChannel extends GuildChannel {
@@ -464,7 +449,6 @@ export class BaseGuildVoiceChannel extends GuildChannel {
   public bitrate: number;
   public userLimit: number;
   public createInvite(options?: CreateInviteOptions): Promise<Invite>;
-  public setRTCRegion(rtcRegion: string | null, reason?: string): Promise<this>;
   public fetchInvites(cache?: boolean): Promise<Collection<string, Invite>>;
 }
 
@@ -662,11 +646,7 @@ export class ClientUser extends User {
   public edit(data: ClientUserEditData): Promise<this>;
   public setActivity(options?: ActivityOptions): ClientPresence;
   public setActivity(name: string, options?: ActivityOptions): ClientPresence;
-  public setAFK(afk?: boolean, shardId?: number | number[]): ClientPresence;
-  public setAvatar(avatar: BufferResolvable | Base64Resolvable | null): Promise<this>;
   public setPresence(data: PresenceData): ClientPresence;
-  public setStatus(status: PresenceStatusData, shardId?: number | number[]): ClientPresence;
-  public setUsername(username: string): Promise<this>;
 }
 
 export class Options extends null {
@@ -891,9 +871,7 @@ export class DiscordAPIError extends Error {
 export class DMChannel extends TextBasedChannelMixin(Channel, [
   'bulkDelete',
   'fetchWebhooks',
-  'createWebhook',
-  'setRateLimitPerUser',
-  'setNSFW',
+  'createWebhook'
 ]) {
   private constructor(client: Client, data?: RawDMChannelData);
   public recipient: User;
@@ -988,35 +966,6 @@ export class Guild extends AnonymousGuild {
   public fetchWidget(): Promise<Widget>;
   public fetchWidgetSettings(): Promise<GuildWidgetSettings>;
   public leave(): Promise<Guild>;
-  public setAFKChannel(afkChannel: VoiceChannelResolvable | null, reason?: string): Promise<Guild>;
-  public setAFKTimeout(afkTimeout: number, reason?: string): Promise<Guild>;
-  public setBanner(banner: BufferResolvable | Base64Resolvable | null, reason?: string): Promise<Guild>;
-  public setChannelPositions(channelPositions: readonly ChannelPosition[]): Promise<Guild>;
-  public setDefaultMessageNotifications(
-    defaultMessageNotifications: DefaultMessageNotificationLevel | number | null,
-    reason?: string,
-  ): Promise<Guild>;
-  public setDiscoverySplash(
-    discoverySplash: BufferResolvable | Base64Resolvable | null,
-    reason?: string,
-  ): Promise<Guild>;
-  public setExplicitContentFilter(
-    explicitContentFilter: ExplicitContentFilterLevel | number | null,
-    reason?: string,
-  ): Promise<Guild>;
-  public setIcon(icon: BufferResolvable | Base64Resolvable | null, reason?: string): Promise<Guild>;
-  public setName(name: string, reason?: string): Promise<Guild>;
-  public setOwner(owner: GuildMemberResolvable, reason?: string): Promise<Guild>;
-  public setPreferredLocale(preferredLocale: string | null, reason?: string): Promise<Guild>;
-  public setPublicUpdatesChannel(publicUpdatesChannel: TextChannelResolvable | null, reason?: string): Promise<Guild>;
-  public setRolePositions(rolePositions: readonly RolePosition[]): Promise<Guild>;
-  public setRulesChannel(rulesChannel: TextChannelResolvable | null, reason?: string): Promise<Guild>;
-  public setSplash(splash: BufferResolvable | Base64Resolvable | null, reason?: string): Promise<Guild>;
-  public setSystemChannel(systemChannel: TextChannelResolvable | null, reason?: string): Promise<Guild>;
-  public setSystemChannelFlags(systemChannelFlags: SystemChannelFlagsResolvable, reason?: string): Promise<Guild>;
-  public setVerificationLevel(verificationLevel: VerificationLevel | number | null, reason?: string): Promise<Guild>;
-  public setPremiumProgressBarEnabled(enabled?: boolean, reason?: string): Promise<Guild>;
-  public setWidgetSettings(settings: GuildWidgetSettingsData, reason?: string): Promise<Guild>;
   public toJSON(): unknown;
 }
 
@@ -1107,8 +1056,6 @@ export abstract class GuildChannel extends Channel {
     memberOrRole: GuildMemberResolvable | RoleResolvable,
     checkAdmin?: boolean,
   ): Readonly<Permissions> | null;
-  public setName(name: string, reason?: string): Promise<this>;
-  public setParent(channel: CategoryChannelResolvable | null, options?: SetParentOptions): Promise<this>;
   public setPosition(position: number, options?: SetChannelPositionOptions): Promise<this>;
   public isText(): this is GuildTextBasedChannel;
 }
@@ -1126,7 +1073,6 @@ export class GuildEmoji extends BaseGuildEmoji {
   public edit(data: GuildEmojiEditData, reason?: string): Promise<GuildEmoji>;
   public equals(other: GuildEmoji | unknown): boolean;
   public fetchAuthor(): Promise<User>;
-  public setName(name: string, reason?: string): Promise<GuildEmoji>;
 }
 
 export class GuildMember extends PartialTextBasedChannel(Base) {
@@ -1170,7 +1116,6 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
   };
   public kick(reason?: string): Promise<GuildMember>;
   public permissionsIn(channel: GuildChannelResolvable): Readonly<Permissions>;
-  public setNickname(nickname: string | null, reason?: string): Promise<GuildMember>;
   public toJSON(): unknown;
   public toString(): MemberMention;
   public valueOf(): string;
@@ -1230,23 +1175,10 @@ export class GuildScheduledEvent<S extends GuildScheduledEventStatus = GuildSche
     options: GuildScheduledEventEditOptions<S, T>,
   ): Promise<GuildScheduledEvent<T>>;
   public delete(): Promise<GuildScheduledEvent<S>>;
-  public setName(name: string, reason?: string): Promise<GuildScheduledEvent<S>>;
-  public setScheduledStartTime(scheduledStartTime: DateResolvable, reason?: string): Promise<GuildScheduledEvent<S>>;
-  public setScheduledEndTime(scheduledEndTime: DateResolvable, reason?: string): Promise<GuildScheduledEvent<S>>;
-  public setDescription(description: string, reason?: string): Promise<GuildScheduledEvent<S>>;
-  public setStatus<T extends GuildScheduledEventSetStatusArg<S>>(
-    status: T,
-    reason?: string,
-  ): Promise<GuildScheduledEvent<T>>;
-  public setLocation(location: string, reason?: string): Promise<GuildScheduledEvent<S>>;
   public fetchSubscribers<T extends FetchGuildScheduledEventSubscribersOptions>(
     options?: T,
   ): Promise<GuildScheduledEventManagerFetchSubscribersResult<T>>;
   public toString(): string;
-  public isActive(): this is GuildScheduledEvent<'ACTIVE'>;
-  public isCanceled(): this is GuildScheduledEvent<'CANCELED'>;
-  public isCompleted(): this is GuildScheduledEvent<'COMPLETED'>;
-  public isScheduled(): this is GuildScheduledEvent<'SCHEDULED'>;
 }
 
 export class GuildTemplate extends Base {
@@ -1585,11 +1517,9 @@ export class Message<Cached extends boolean = boolean> extends Base {
   public fetch(force?: boolean): Promise<Message>;
   public pin(reason?: string): Promise<Message>;
   public react(emoji: EmojiIdentifierResolvable): Promise<MessageReaction>;
-  public removeAttachments(): Promise<Message>;
   public reply(options: string | MessagePayload | ReplyMessageOptions): Promise<Message>;
   public resolveComponent(customId: string): MessageActionRowComponent | null;
   public startThread(options: StartThreadOptions): Promise<ThreadChannel>;
-  public suppressEmbeds(suppress?: boolean): Promise<Message>;
   public toJSON(): unknown;
   public toString(): string;
   public unpin(reason?: string): Promise<Message>;
@@ -1627,10 +1557,6 @@ export class MessageAttachment {
   public readonly spoiler: boolean;
   public url: string;
   public width: number | null;
-  public setDescription(description: string): this;
-  public setFile(attachment: BufferResolvable | Stream, name?: string): this;
-  public setName(name: string): this;
-  public setSpoiler(spoiler?: boolean): this;
   public toJSON(): unknown;
 }
 
@@ -2073,14 +1999,7 @@ export class Role extends Base {
   public equals(role: Role): boolean;
   public iconURL(options?: StaticImageURLOptions): string | null;
   public permissionsIn(channel: NonThreadGuildBasedChannel | Snowflake, checkAdmin?: boolean): Readonly<Permissions>;
-  public setColor(color: ColorResolvable, reason?: string): Promise<Role>;
-  public setHoist(hoist?: boolean, reason?: string): Promise<Role>;
-  public setMentionable(mentionable?: boolean, reason?: string): Promise<Role>;
-  public setName(name: string, reason?: string): Promise<Role>;
-  public setPermissions(permissions: PermissionResolvable, reason?: string): Promise<Role>;
-  public setIcon(icon: BufferResolvable | Base64Resolvable | EmojiResolvable | null, reason?: string): Promise<Role>;
   public setPosition(position: number, options?: SetRolePositionOptions): Promise<Role>;
-  public setUnicodeEmoji(unicodeEmoji: string | null, reason?: string): Promise<Role>;
   public toJSON(): unknown;
   public toString(): RoleMention;
 
@@ -2235,7 +2154,6 @@ export class StageChannel extends BaseGuildVoiceChannel {
   public type: 'GUILD_STAGE_VOICE';
   public readonly stageInstance: StageInstance | null;
   public createStageInstance(options: StageInstanceCreateOptions): Promise<StageInstance>;
-  public setTopic(topic: string): Promise<StageChannel>;
 }
 
 export class DirectoryChannel extends Channel {}
@@ -2254,7 +2172,6 @@ export class StageInstance extends Base {
   public get guildScheduledEvent(): GuildScheduledEvent | null;
   public edit(options: StageInstanceEditOptions): Promise<StageInstance>;
   public delete(): Promise<StageInstance>;
-  public setTopic(topic: string): Promise<StageInstance>;
   public readonly createdTimestamp: number;
   public readonly createdAt: Date;
 }
@@ -2423,7 +2340,7 @@ export class TextInputComponent extends BaseMessageComponent {
   public static resolveStyle(style: TextInputStyleResolvable): TextInputStyle;
 }
 
-export class ThreadChannel extends TextBasedChannelMixin(Channel, ['fetchWebhooks', 'createWebhook', 'setNSFW']) {
+export class ThreadChannel extends TextBasedChannelMixin(Channel, ['fetchWebhooks', 'createWebhook']) {
   private constructor(guild: Guild, data?: RawThreadChannelData, client?: Client, fromInteraction?: boolean);
   public archived: boolean | null;
   public readonly archivedAt: Date | null;
@@ -2475,8 +2392,6 @@ export class ThreadChannel extends TextBasedChannelMixin(Channel, ['fetchWebhook
     reason?: string,
   ): Promise<ThreadChannel>;
   public setInvitable(invitable?: boolean, reason?: string): Promise<ThreadChannel>;
-  public setLocked(locked?: boolean, reason?: string): Promise<ThreadChannel>;
-  public setName(name: string, reason?: string): Promise<ThreadChannel>;
 }
 
 export class ThreadMember extends Base {
@@ -2625,9 +2540,6 @@ export class VoiceChannel extends TextBasedChannelMixin(BaseGuildVoiceChannel, [
   public type: 'GUILD_VOICE';
   public nsfw: boolean;
   public rateLimitPerUser: number | null;
-  public setBitrate(bitrate: number, reason?: string): Promise<VoiceChannel>;
-  public setUserLimit(userLimit: number, reason?: string): Promise<VoiceChannel>;
-  public setVideoQualityMode(videoQualityMode: VideoQualityMode | number, reason?: string): Promise<VoiceChannel>;
 }
 
 export class VoiceRegion {
@@ -3484,8 +3396,6 @@ export interface TextBasedChannelFields extends PartialTextBasedChannelFields {
   ): InteractionCollector<MappedInteractionTypes[T]>;
   createMessageCollector(options?: MessageCollectorOptions): MessageCollector;
   createWebhook(name: string, options?: ChannelWebhookCreateOptions): Promise<Webhook>;
-  setRateLimitPerUser(rateLimitPerUser: number, reason?: string): Promise<this>;
-  setNSFW(nsfw?: boolean, reason?: string): Promise<this>;
   fetchWebhooks(): Promise<Collection<Snowflake, Webhook>>;
   sendTyping(): Promise<void>;
 }
@@ -5700,11 +5610,6 @@ export interface RoleTagData {
 
 export interface SetChannelPositionOptions {
   relative?: boolean;
-  reason?: string;
-}
-
-export interface SetParentOptions {
-  lockPermissions?: boolean;
   reason?: string;
 }
 

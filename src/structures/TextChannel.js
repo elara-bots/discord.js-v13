@@ -19,15 +19,6 @@ class TextChannel extends BaseGuildTextChannel {
     }
   }
 
-  /**
-   * Sets the rate limit per user (slowmode) for this channel.
-   * @param {number} rateLimitPerUser The new rate limit in seconds
-   * @param {string} [reason] Reason for changing the channel's rate limit
-   * @returns {Promise<TextChannel>}
-   */
-  setRateLimitPerUser(rateLimitPerUser, reason) {
-    return this.edit({ rateLimitPerUser }, reason);
-  }
 }
 
 module.exports = TextChannel;

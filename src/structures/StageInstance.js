@@ -132,20 +132,6 @@ class StageInstance extends Base {
   }
 
   /**
-   * Sets the topic of this stage instance.
-   * @param {string} topic The topic for the stage instance
-   * @returns {Promise<StageInstance>}
-   * @example
-   * // Set topic of a stage instance
-   * stageInstance.setTopic('new topic')
-   *  .then(stageInstance => console.log(`Set the topic to: ${stageInstance.topic}`))
-   *  .catch(console.error);
-   */
-  setTopic(topic) {
-    return this.guild.stageInstances.edit(this.channelId, { topic });
-  }
-
-  /**
    * The timestamp this stage instances was created at
    * @type {number}
    * @readonly

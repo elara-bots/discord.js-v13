@@ -275,49 +275,6 @@ class GuildChannel extends Channel {
   }
 
   /**
-   * Sets a new name for the guild channel.
-   * @param {string} name The new name for the guild channel
-   * @param {string} [reason] Reason for changing the guild channel's name
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * // Set a new channel name
-   * channel.setName('not_general')
-   *   .then(newChannel => console.log(`Channel's new name is ${newChannel.name}`))
-   *   .catch(console.error);
-   */
-  setName(name, reason) {
-    return this.edit({ name }, reason);
-  }
-
-  /**
-   * Options used to set the parent of a channel.
-   * @typedef {Object} SetParentOptions
-   * @property {boolean} [lockPermissions=true] Whether to lock the permissions to what the parent's permissions are
-   * @property {string} [reason] The reason for modifying the parent of the channel
-   */
-
-  /**
-   * Sets the parent of this channel.
-   * @param {?CategoryChannelResolvable} channel The category channel to set as the parent
-   * @param {SetParentOptions} [options={}] The options for setting the parent
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * // Add a parent to a channel
-   * message.channel.setParent('355908108431917066', { lockPermissions: false })
-   *   .then(channel => console.log(`New parent of ${message.channel.name}: ${channel.name}`))
-   *   .catch(console.error);
-   */
-  setParent(channel, { lockPermissions = true, reason } = {}) {
-    return this.edit(
-      {
-        parent: channel ?? null,
-        lockPermissions,
-      },
-      reason,
-    );
-  }
-
-  /**
    * Options used to set the position of a channel.
    * @typedef {Object} SetChannelPositionOptions
    * @property {boolean} [relative=false] Whether or not to change the position relative to its current value

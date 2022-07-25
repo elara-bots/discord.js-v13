@@ -293,99 +293,6 @@ class GuildScheduledEvent extends Base {
   }
 
   /**
-   * Sets a new name for the guild scheduled event.
-   * @param {string} name The new name of the guild scheduled event
-   * @param {string} [reason] The reason for changing the name
-   * @returns {Promise<GuildScheduledEvent>}
-   * @example
-   * // Set name of a guild scheduled event
-   * guildScheduledEvent.setName('Birthday Party')
-   *  .then(guildScheduledEvent => console.log(`Set the name to: ${guildScheduledEvent.name}`))
-   *  .catch(console.error);
-   */
-  setName(name, reason) {
-    return this.edit({ name, reason });
-  }
-
-  /**
-   * Sets a new time to schedule the event at.
-   * @param {DateResolvable} scheduledStartTime The time to schedule the event at
-   * @param {string} [reason] The reason for changing the scheduled start time
-   * @returns {Promise<GuildScheduledEvent>}
-   * @example
-   * // Set start time of a guild scheduled event
-   * guildScheduledEvent.setScheduledStartTime('2022-09-24T00:00:00+05:30')
-   *  .then(guildScheduledEvent => console.log(`Set the start time to: ${guildScheduledEvent.scheduledStartTime}`))
-   *  .catch(console.error);
-   */
-  setScheduledStartTime(scheduledStartTime, reason) {
-    return this.edit({ scheduledStartTime, reason });
-  }
-
-  // TODO: scheduledEndTime gets reset on passing null but it hasn't been documented
-  /**
-   * Sets a new time to end the event at.
-   * @param {DateResolvable} scheduledEndTime The time to end the event at
-   * @param {string} [reason] The reason for changing the scheduled end time
-   * @returns {Promise<GuildScheduledEvent>}
-   * @example
-   * // Set end time of a guild scheduled event
-   * guildScheduledEvent.setScheduledEndTime('2022-09-25T00:00:00+05:30')
-   *  .then(guildScheduledEvent => console.log(`Set the end time to: ${guildScheduledEvent.scheduledEndTime}`))
-   *  .catch(console.error);
-   */
-  setScheduledEndTime(scheduledEndTime, reason) {
-    return this.edit({ scheduledEndTime, reason });
-  }
-
-  /**
-   * Sets the new description of the guild scheduled event.
-   * @param {string} description The description of the guild scheduled event
-   * @param {string} [reason] The reason for changing the description
-   * @returns {Promise<GuildScheduledEvent>}
-   * @example
-   * // Set description of a guild scheduled event
-   * guildScheduledEvent.setDescription('A virtual birthday party')
-   *  .then(guildScheduledEvent => console.log(`Set the description to: ${guildScheduledEvent.description}`))
-   *  .catch(console.error);
-   */
-  setDescription(description, reason) {
-    return this.edit({ description, reason });
-  }
-
-  /**
-   * Sets the new status of the guild scheduled event.
-   * <info>If you're working with TypeScript, use this method in conjunction with status type-guards
-   * like {@link GuildScheduledEvent#isScheduled} to get only valid status as suggestion</info>
-   * @param {GuildScheduledEventStatus|number} status The status of the guild scheduled event
-   * @param {string} [reason] The reason for changing the status
-   * @returns {Promise<GuildScheduledEvent>}
-   * @example
-   * // Set status of a guild scheduled event
-   * guildScheduledEvent.setStatus('ACTIVE')
-   *  .then(guildScheduledEvent => console.log(`Set the status to: ${guildScheduledEvent.status}`))
-   *  .catch(console.error);
-   */
-  setStatus(status, reason) {
-    return this.edit({ status, reason });
-  }
-
-  /**
-   * Sets the new location of the guild scheduled event.
-   * @param {string} location The location of the guild scheduled event
-   * @param {string} [reason] The reason for changing the location
-   * @returns {Promise<GuildScheduledEvent>}
-   * @example
-   * // Set location of a guild scheduled event
-   * guildScheduledEvent.setLocation('Earth')
-   *  .then(guildScheduledEvent => console.log(`Set the location to: ${guildScheduledEvent.entityMetadata.location}`))
-   *  .catch(console.error);
-   */
-  setLocation(location, reason) {
-    return this.edit({ entityMetadata: { location }, reason });
-  }
-
-  /**
    * Fetches subscribers of this guild scheduled event.
    * @param {FetchGuildScheduledEventSubscribersOptions} [options] Options for fetching the subscribers
    * @returns {Promise<Collection<Snowflake, GuildScheduledEventUser>>}
@@ -404,38 +311,7 @@ class GuildScheduledEvent extends Base {
   toString() {
     return this.url;
   }
-
-  /**
-   * Indicates whether this guild scheduled event has an `ACTIVE` status.
-   * @returns {boolean}
-   */
-  isActive() {
-    return GuildScheduledEventStatuses[this.status] === GuildScheduledEventStatuses.ACTIVE;
-  }
-
-  /**
-   * Indicates whether this guild scheduled event has a `CANCELED` status.
-   * @returns {boolean}
-   */
-  isCanceled() {
-    return GuildScheduledEventStatuses[this.status] === GuildScheduledEventStatuses.CANCELED;
-  }
-
-  /**
-   * Indicates whether this guild scheduled event has a `COMPLETED` status.
-   * @returns {boolean}
-   */
-  isCompleted() {
-    return GuildScheduledEventStatuses[this.status] === GuildScheduledEventStatuses.COMPLETED;
-  }
-
-  /**
-   * Indicates whether this guild scheduled event has a `SCHEDULED` status.
-   * @returns {boolean}
-   */
-  isScheduled() {
-    return GuildScheduledEventStatuses[this.status] === GuildScheduledEventStatuses.SCHEDULED;
-  }
+  
 }
 
 exports.GuildScheduledEvent = GuildScheduledEvent;

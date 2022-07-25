@@ -94,16 +94,12 @@ class DMChannel extends Channel {
   createMessageComponentCollector() {}
   awaitMessageComponent() {}
   // Doesn't work on DM channels; bulkDelete() {}
-  // Doesn't work on DM channels; setRateLimitPerUser() {}
-  // Doesn't work on DM channels; setNSFW() {}
 }
 
 TextBasedChannel.applyToClass(DMChannel, true, [
   'bulkDelete',
   'fetchWebhooks',
-  'createWebhook',
-  'setRateLimitPerUser',
-  'setNSFW',
+  'createWebhook'
 ]);
 
 module.exports = DMChannel;

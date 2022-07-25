@@ -378,47 +378,6 @@ class ThreadChannel extends Channel {
   }
 
   /**
-   * Sets whether the thread can be **unarchived** by anyone with `SEND_MESSAGES` permission.
-   * When a thread is locked only members with `MANAGE_THREADS` can unarchive it.
-   * @param {boolean} [locked=true] Whether the thread is locked
-   * @param {string} [reason] Reason for locking or unlocking the thread
-   * @returns {Promise<ThreadChannel>}
-   * @example
-   * // Set the thread to locked
-   * thread.setLocked(true)
-   *   .then(newThread => console.log(`Thread is now ${newThread.locked ? 'locked' : 'unlocked'}`))
-   *   .catch(console.error);
-   */
-  setLocked(locked = true, reason) {
-    return this.edit({ locked }, reason);
-  }
-
-  /**
-   * Sets a new name for this thread.
-   * @param {string} name The new name for the thread
-   * @param {string} [reason] Reason for changing the thread's name
-   * @returns {Promise<ThreadChannel>}
-   * @example
-   * // Change the thread's name
-   * thread.setName('not_general')
-   *   .then(newThread => console.log(`Thread's new name is ${newThread.name}`))
-   *   .catch(console.error);
-   */
-  setName(name, reason) {
-    return this.edit({ name }, reason);
-  }
-
-  /**
-   * Sets the rate limit per user (slowmode) for this thread.
-   * @param {number} rateLimitPerUser The new rate limit in seconds
-   * @param {string} [reason] Reason for changing the thread's rate limit
-   * @returns {Promise<ThreadChannel>}
-   */
-  setRateLimitPerUser(rateLimitPerUser, reason) {
-    return this.edit({ rateLimitPerUser }, reason);
-  }
-
-  /**
    * Whether the client user is a member of the thread.
    * @type {boolean}
    * @readonly
@@ -545,10 +504,8 @@ class ThreadChannel extends Channel {
   createMessageComponentCollector() {}
   awaitMessageComponent() {}
   bulkDelete() {}
-  // Doesn't work on Thread channels; setRateLimitPerUser() {}
-  // Doesn't work on Thread channels; setNSFW() {}
 }
 
-TextBasedChannel.applyToClass(ThreadChannel, true, ['setRateLimitPerUser', 'setNSFW']);
+TextBasedChannel.applyToClass(ThreadChannel, true);
 
 module.exports = ThreadChannel;

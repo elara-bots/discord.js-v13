@@ -68,24 +68,6 @@ class BaseGuild extends Base {
   }
 
   /**
-   * Whether this guild is partnered
-   * @type {boolean}
-   * @readonly
-   */
-  get partnered() {
-    return this.features.includes('PARTNERED');
-  }
-
-  /**
-   * Whether this guild is verified
-   * @type {boolean}
-   * @readonly
-   */
-  get verified() {
-    return this.features.includes('VERIFIED');
-  }
-
-  /**
    * The URL to this guild's icon.
    * @param {ImageURLOptions} [options={}] Options for the Image URL
    * @returns {?string}

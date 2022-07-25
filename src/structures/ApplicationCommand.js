@@ -246,58 +246,6 @@ class ApplicationCommand extends Base {
     return this.manager.edit(this, data, this.guildId);
   }
 
-  /**
-   * Edits the name of this ApplicationCommand
-   * @param {string} name The new name of the command
-   * @returns {Promise<ApplicationCommand>}
-   */
-  setName(name) {
-    return this.edit({ name });
-  }
-
-  /**
-   * Edits the localized names of this ApplicationCommand
-   * @param {Object<Locale, string>} nameLocalizations The new localized names for the command
-   * @returns {Promise<ApplicationCommand>}
-   * @example
-   * // Edit the name localizations of this command
-   * command.setLocalizedNames({
-   *   'en-GB': 'test',
-   *   'pt-BR': 'teste',
-   * })
-   *   .then(console.log)
-   *   .catch(console.error)
-   */
-  setNameLocalizations(nameLocalizations) {
-    return this.edit({ nameLocalizations });
-  }
-
-  /**
-   * Edits the description of this ApplicationCommand
-   * @param {string} description The new description of the command
-   * @returns {Promise<ApplicationCommand>}
-   */
-  setDescription(description) {
-    return this.edit({ description });
-  }
-
-  /**
-   * Edits the localized descriptions of this ApplicationCommand
-   * @param {Object<Locale, string>} descriptionLocalizations The new localized descriptions for the command
-   * @returns {Promise<ApplicationCommand>}
-   * @example
-   * // Edit the description localizations of this command
-   * command.setLocalizedDescriptions({
-   *   'en-GB': 'A test command',
-   *   'pt-BR': 'Um comando de teste',
-   * })
-   *   .then(console.log)
-   *   .catch(console.error)
-   */
-  setDescriptionLocalizations(descriptionLocalizations) {
-    return this.edit({ descriptionLocalizations });
-  }
-
   /* eslint-enable max-len */
   /**
    * Edits the default member permissions of this ApplicationCommand
