@@ -506,6 +506,6 @@ class ThreadChannel extends Channel {
   bulkDelete() {}
 }
 
-TextBasedChannel.applyToClass(ThreadChannel, true);
+TextBasedChannel.applyToClass(ThreadChannel, true, ['fetchWebhooks']);
 
 module.exports = ThreadChannel;
