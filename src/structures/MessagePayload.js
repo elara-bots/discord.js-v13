@@ -255,7 +255,7 @@ class MessagePayload {
     }
 
     const resource = await DataResolver.resolveFile(attachment);
-    return { attachment, name, file: resource };
+    return { data: attachment, name, file: resource };
   }
 
   /**
