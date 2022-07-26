@@ -1,6 +1,7 @@
 'use strict';
 
 const { Collection } = require('@discordjs/collection');
+const { makeURLSearchParams } = require("@discordjs/rest");
 const AnonymousGuild = require('./AnonymousGuild');
 const GuildAuditLogs = require('./GuildAuditLogs');
 const GuildPreview = require('./GuildPreview');
@@ -745,12 +746,12 @@ class Guild extends AnonymousGuild {
     if (typeof options.type === 'string') options.type = GuildAuditLogs.Actions[options.type];
 
     const data = await this.client.rest.get(Routes.guildAuditLog(this.id), {
-      query: {
+      query: makeURLSearchParams({
         before: options.before,
         limit: options.limit,
         user_id: this.client.users.resolveId(options.user),
         action_type: options.type,
-      },
+      }),
     })
     return GuildAuditLogs.build(this, data);
   }

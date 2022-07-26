@@ -1,6 +1,7 @@
 'use strict';
 
 const { Collection } = require('@discordjs/collection');
+const { makeURLSearchParams } = require("@discordjs/rest");
 const CachedManager = require('./CachedManager');
 const { TypeError, Error } = require('../errors');
 const { GuildScheduledEvent } = require('../structures/GuildScheduledEvent');
@@ -276,7 +277,9 @@ class GuildScheduledEventManager extends CachedManager {
     let { limit, withMember, before, after } = options;
 
     const data = await this.client.rest.get(Routes.guildScheduledEventUsers(this.guild.id, guildScheduledEventId), {
-      query: { limit, with_member: withMember, before, after }
+      query: makeURLSearchParams({
+        limit, with_member: withMember, before, after
+      })
     })
 
     return data.reduce(

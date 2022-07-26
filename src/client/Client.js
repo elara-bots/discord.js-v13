@@ -2,6 +2,7 @@
 
 const process = require('node:process');
 const { Collection } = require('@discordjs/collection');
+const { makeURLSearchParams } = require("@discordjs/rest");
 const BaseClient = require('./BaseClient');
 const ActionsManager = require('./actions/ActionsManager');
 const ClientVoiceManager = require('./voice/ClientVoiceManager');
@@ -296,7 +297,11 @@ class Client extends BaseClient {
   async fetchInvite(invite, options) {
     const code = DataResolver.resolveInviteCode(invite);
     const data = await this.rest.get(Routes.invite(code), {
-      query: { with_counts: true, with_expiration: true, guild_scheduled_event_id: options?.guildScheduledEventId }
+      query: makeURLSearchParams({
+        with_counts: true,
+        with_expiration: true,
+        guild_scheduled_event_id: options?.guildScheduledEventId
+      })
     })
     return new Invite(this, data);
   }

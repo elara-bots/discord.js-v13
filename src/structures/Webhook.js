@@ -1,6 +1,7 @@
 'use strict';
 
 const process = require('node:process');
+const { makeURLSearchParams } = require("@discordjs/rest");
 const MessagePayload = require('./MessagePayload');
 const { Error } = require('../errors');
 const { WebhookTypes } = require('../util/Constants');
@@ -194,11 +195,13 @@ class Webhook {
     }
 
     const { data, files } = await messagePayload.resolveFiles();
+    const query = new URLSearchParams();
+    query.append("wait", true);
+    if (messagePayload.options.threadId) query.append("thread_id", messagePayload.options.threadId);
 
     const d = await this.client.rest.post(Routes.webhook(this.id, this.token), {
       body: data,
-      files,
-      query: { thread_id: messagePayload.options.threadId, wait: true },
+      files, query,
       auth: false
     })
 
@@ -299,7 +302,7 @@ class Webhook {
     if (!this.token) throw new Error('WEBHOOK_TOKEN_UNAVAILABLE');
 
     const data = await this.client.rest.get(Routes.webhookMessage(this.id, this.token, message), {
-      query: { thread_id: cacheOrOptions.threadId },
+      query: makeURLSearchParams({ thread_id: cacheOrOptions.threadId }),
       auth: false
     });
     return this.client.channels?.cache.get(data.channel_id)?.messages._add(data, cacheOrOptions.cache) ?? data;
@@ -325,9 +328,9 @@ class Webhook {
     const d = await this.client.rest.patch(Routes.webhookMessage(this.id, this.token, typeof message === "string" ? message : message.id), {
       body: data,
       files,
-      query: {
+      query: makeURLSearchParams({
         thread_id: messagePayload.options.threadId
-      },
+      }),
       auth: false
     })
 
@@ -361,7 +364,7 @@ class Webhook {
     if (!this.token) throw new Error('WEBHOOK_TOKEN_UNAVAILABLE');
     await this.client.rest.delete(Routes.webhookMessage(this.id, this.token, typeof message === "string" ? message : message.id),
       {
-        query: { thread_id: threadId },
+        query: makeURLSearchParams({ thread_id: threadId }),
         auth: false
       })
   }

@@ -1,6 +1,7 @@
 'use strict';
 
 const { Collection } = require('@discordjs/collection');
+const { makeURLSearchParams } = require("@discordjs/rest");
 const CachedManager = require('./CachedManager');
 const { TypeError } = require('../errors');
 const ThreadChannel = require('../structures/ThreadChannel');
@@ -221,7 +222,7 @@ class ThreadManager extends CachedManager {
       }
     }
     const raw = await this.client.rest.get(path, {
-      query: { before: type === 'private' && !fetchAll ? id : timestamp, limit }
+      query: makeURLSearchParams({ before: type === 'private' && !fetchAll ? id : timestamp, limit })
     })
     return this.constructor._mapThreads(raw, this.client, { parent: this.channel, cache });
   }
