@@ -146,7 +146,7 @@ class User extends Base {
    */
   avatarURL({ format, size, dynamic } = {}) {
     if (!this.avatar) return null;
-    return this.client.rest.cdn.avatar(this.id, this.avatar, format, size, dynamic);
+    return this.client.rest.cdn.avatar(this.id, this.avatar, { extension: format, size, forceStatic: dynamic === true ? false : true })
   }
 
   /**
