@@ -2,6 +2,7 @@
 
 const { isJSONEncodable } = require('@discordjs/builders');
 const { Collection } = require('@discordjs/collection');
+const { makeURLSearchParams } = require('@discordjs/rest');
 const ApplicationCommandPermissionsManager = require('./ApplicationCommandPermissionsManager');
 const CachedManager = require('./CachedManager');
 const { TypeError } = require('../errors');
@@ -115,7 +116,7 @@ class ApplicationCommandManager extends CachedManager {
       headers: {
         "X-Discord-Locale": locale
       },
-      query: typeof withLocalizations === 'boolean' ? { with_localizations: withLocalizations } : undefined,
+      query: makeURLSearchParams({ with_localizations: typeof withLocalizations === "boolean" ? withLocalizations : undefined })
     });
     return data.reduce((coll, command) => coll.set(command.id, this._add(command, cache, guildId)), new Collection());
   }
