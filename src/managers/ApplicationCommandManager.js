@@ -44,8 +44,14 @@ class ApplicationCommandManager extends CachedManager {
    * @private
    */
   commandPath({ id, guildId } = {}) {
-    let path = Routes.applicationCommands(id);
-    if (this.guild ?? guildId) path = Routes.applicationGuildCommands(id, this.guild?.id ?? guildId);
+    const applicationId = this.client.application?.id ?? this.client.user.id;
+    const gId = this.guild?.id ?? guildId;
+    let path = Routes.applicationCommands(applicationId);
+    if (gId) path = Routes.applicationGuildCommands(applicationId, gId);
+    if (id) {
+      path = Routes.applicationCommand(applicationId, id);
+      if (gId) path = Routes.applicationGuildCommand(applicationId, gId, id);
+    }
     return path;
   }
 
