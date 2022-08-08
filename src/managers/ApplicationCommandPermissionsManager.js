@@ -96,11 +96,11 @@ class ApplicationCommandPermissionsManager extends BaseManager {
   async fetch({ guild, command } = {}) {
     const { guildId, commandId } = this._validateOptions(guild, command);
     if (commandId) {
-      const data = await this.permissionsPath(guildId, commandId).get();
+      const data = await this.client.rest.get(this.permissionsPath(guild, commandId));
       return data.permissions.map(perm => this.constructor.transformPermissions(perm, true));
     }
 
-    const data = await this.permissionsPath(guildId).get();
+    const data = await this.client.rest.get(this.permissionsPath(guildId));
     return data.reduce(
       (coll, perm) =>
         coll.set(
@@ -166,8 +166,8 @@ class ApplicationCommandPermissionsManager extends BaseManager {
       if (!Array.isArray(permissions)) {
         throw new TypeError('INVALID_TYPE', 'permissions', 'Array of ApplicationCommandPermissionData', true);
       }
-      const data = await this.permissionsPath(guildId, commandId).put({
-        data: { permissions: permissions.map(perm => this.constructor.transformPermissions(perm)) },
+      const data = await this.client.rest.put(this.permissionsPath(guildId, commandId), {
+        body: { permissions: permissions.map(p => this.constructor.transformPermissions(p)) }
       });
       return data.permissions.map(perm => this.constructor.transformPermissions(perm, true));
     }
@@ -184,8 +184,8 @@ class ApplicationCommandPermissionsManager extends BaseManager {
         permissions: perm.permissions.map(p => this.constructor.transformPermissions(p)),
       });
     }
-    const data = await this.permissionsPath(guildId).put({
-      data: APIPermissions,
+    const data = await this.client.rest.put(this.permissionsPath(guildId), {
+      body: APIPermissions
     });
     return data.reduce(
       (coll, perm) =>
