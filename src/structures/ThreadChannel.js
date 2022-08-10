@@ -287,7 +287,7 @@ class ThreadChannel extends Channel {
    * @returns {Promise<Message>}
    */
   fetchStarterMessage(options) {
-    return this.parent.messages.fetch(this.id, options);
+    return this.parent?.messages.fetch(this.id, options);
   }
 
   /**
