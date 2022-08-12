@@ -1214,7 +1214,7 @@ export class Integration extends Base {
   public role: Role | undefined;
   public enableEmoticons: boolean | null;
   public readonly roles: Collection<Snowflake, Role>;
-  public scopes: string[] | undefined;
+  public scopes: InviteScope[] | undefined;
   public syncedAt: number | undefined;
   public syncing: boolean | undefined;
   public type: IntegrationType;
