@@ -100,6 +100,14 @@ class Integration extends Base {
      */
     this.syncedAt = data.synced_at;
 
+    if ('scopes' in data) {
+      /**
+       * What scopes the integration has
+       * @type {?string[]}
+       */
+      this.scopes = data.scopes;
+    }
+
     if ('subscriber_count' in data) {
       /**
        * How many subscribers this integration has
@@ -134,6 +142,14 @@ class Integration extends Base {
   }
 
   _patch(data) {
+    if ('scopes' in data) {
+      /**
+       * What scopes the integration has
+       * @type {?string[]}
+       */
+      this.scopes = data.scopes;
+    }
+
     if ('expire_behavior' in data) {
       /**
        * The behavior of expiring subscribers
