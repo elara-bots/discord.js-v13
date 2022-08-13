@@ -2,7 +2,7 @@
 
 const Base = require('./Base');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * The base class for {@link Guild}, {@link OAuth2Guild} and {@link InviteGuild}.

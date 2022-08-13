@@ -108,7 +108,7 @@ const { DefaultRestOptions } = require("@discordjs/rest");
 /**
  * HTTP options
  * @typedef {Object} HTTPOptions
- * @property {number} [version=9] API version to use
+ * @property {number} [version=10] API version to use
  * @property {AgentOptions} [agent={}] HTTPS Agent options
  * @property {string} [api='https://discord.com/api'] Base URL of the API
  * @property {string} [cdn='https://cdn.discordapp.com'] Base URL of the CDN
@@ -151,7 +151,7 @@ class Options extends null {
           browser: 'discord.js',
           device: 'discord.js',
         },
-        version: 9,
+        version: 10,
       },
       http: {
         agent: DefaultRestOptions.agent,

@@ -10,7 +10,7 @@ const { GuildMember } = require('../structures/GuildMember');
 const { Role } = require('../structures/Role');
 const { Events, Opcodes } = require('../util/Constants');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Manages API methods for GuildMembers and stores their cache.

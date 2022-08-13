@@ -5,7 +5,7 @@ const Application = require('./interfaces/Application');
 const ApplicationCommandManager = require('../managers/ApplicationCommandManager');
 const ApplicationFlags = require('../util/ApplicationFlags');
 const Permissions = require('../util/Permissions');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * @typedef {Object} ClientApplicationInstallParams

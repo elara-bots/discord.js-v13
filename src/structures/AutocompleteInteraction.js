@@ -3,7 +3,7 @@
 const CommandInteractionOptionResolver = require('./CommandInteractionOptionResolver');
 const Interaction = require('./Interaction');
 const { InteractionResponseTypes, ApplicationCommandOptionTypes } = require('../util/Constants');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Represents an autocomplete interaction.

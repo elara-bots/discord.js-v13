@@ -4,7 +4,7 @@ const { Collection } = require('@discordjs/collection');
 const BaseManager = require('./BaseManager');
 const { Error, TypeError } = require('../errors');
 const { ApplicationCommandPermissionTypes, APIErrors } = require('../util/Constants');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Manages API methods for permissions of Application Commands.

@@ -5,7 +5,7 @@ const Base = require('./Base');
 const GuildPreviewEmoji = require('./GuildPreviewEmoji');
 const { Sticker } = require('./Sticker');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Represents the data about the guild any bot can preview, connected to the specified guild.

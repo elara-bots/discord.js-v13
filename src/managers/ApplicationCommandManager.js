@@ -9,7 +9,7 @@ const { TypeError } = require('../errors');
 const ApplicationCommand = require('../structures/ApplicationCommand');
 const { ApplicationCommandTypes } = require('../util/Constants');
 const Permissions = require('../util/Permissions');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Manages API methods for application commands and stores their cache.

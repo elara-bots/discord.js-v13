@@ -1,6 +1,6 @@
 'use strict';
 
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 const Base = require('./Base');
 const IntegrationApplication = require('./IntegrationApplication');
 
@@ -100,14 +100,6 @@ class Integration extends Base {
      */
     this.syncedAt = data.synced_at;
 
-    if ('scopes' in data) {
-      /**
-       * What scopes the integration has
-       * @type {?string[]}
-       */
-      this.scopes = data.scopes;
-    }
-
     if ('subscriber_count' in data) {
       /**
        * How many subscribers this integration has
@@ -142,14 +134,6 @@ class Integration extends Base {
   }
 
   _patch(data) {
-    if ('scopes' in data) {
-      /**
-       * What scopes the integration has
-       * @type {?string[]}
-       */
-      this.scopes = data.scopes;
-    }
-
     if ('expire_behavior' in data) {
       /**
        * The behavior of expiring subscribers
@@ -178,6 +162,16 @@ class Integration extends Base {
       }
     } else {
       this.application ??= null;
+    }
+
+    if ('scopes' in data) {
+      /**
+       * The scopes the application has been authorized for
+       * @type {?OAuth2Scopes[]}
+       */
+      this.scopes = data.scopes;
+    } else {
+      this.scopes ??= null;
     }
   }
 

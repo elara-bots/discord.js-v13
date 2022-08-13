@@ -80,7 +80,7 @@ import {
   APITextInputComponent,
   APIModalActionRowComponent,
   APIModalSubmitInteraction,
-} from 'discord-api-types/v9';
+} from 'discord-api-types/v10';
 import { GuildChannel, Guild, PermissionOverwrites, InteractionType } from '.';
 import type { InteractionTypes, MessageComponentTypes } from './enums';
 

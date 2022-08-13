@@ -5,7 +5,7 @@ const CachedManager = require('./CachedManager');
 const { Error } = require('../errors');
 const Invite = require('../structures/Invite');
 const DataResolver = require('../util/DataResolver');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Manages API methods for GuildInvites and stores their cache.

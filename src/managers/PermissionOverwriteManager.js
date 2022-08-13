@@ -7,7 +7,7 @@ const { TypeError } = require('../errors');
 const PermissionOverwrites = require('../structures/PermissionOverwrites');
 const { Role } = require('../structures/Role');
 const { OverwriteTypes } = require('../util/Constants');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 let cacheWarningEmitted = false;
 

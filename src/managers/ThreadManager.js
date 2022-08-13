@@ -7,7 +7,7 @@ const { TypeError } = require('../errors');
 const ThreadChannel = require('../structures/ThreadChannel');
 const { ChannelTypes } = require('../util/Constants');
 const { resolveAutoArchiveMaxLimit } = require('../util/Util');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Manages API methods for {@link ThreadChannel} objects and stores their cache.

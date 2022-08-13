@@ -2,7 +2,7 @@
 
 const Base = require('./Base');
 const { Error, TypeError } = require('../errors');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Represents the voice state for a Guild Member.

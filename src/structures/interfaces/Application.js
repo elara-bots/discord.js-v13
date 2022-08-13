@@ -1,6 +1,5 @@
 'use strict';
 
-const { Routes } = require('discord-api-types/v9');
 const { ClientApplicationAssetTypes, Endpoints } = require('../../util/Constants');
 const SnowflakeUtil = require('../../util/SnowflakeUtil');
 const Base = require('../Base');

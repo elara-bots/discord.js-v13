@@ -7,7 +7,7 @@ const MessageManager = require('../managers/MessageManager');
 const ThreadMemberManager = require('../managers/ThreadMemberManager');
 const Permissions = require('../util/Permissions');
 const { resolveAutoArchiveMaxLimit } = require('../util/Util');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Represents a thread channel on Discord.

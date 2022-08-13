@@ -1,6 +1,6 @@
 'use strict';
 
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 const { Error } = require('../../errors');
 const { InteractionResponseTypes, InteractionTypes } = require('../../util/Constants');
 const MessageFlags = require('../../util/MessageFlags');

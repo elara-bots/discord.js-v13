@@ -398,5 +398,5 @@ class TextBasedChannel {
 module.exports = TextBasedChannel;
 
 // Fixes Circular
-const MessageManager = require('../../managers/MessageManager');const { Routes } = require('discord-api-types/v9');
-
+const MessageManager = require('../../managers/MessageManager');
+const { Routes } = require('discord-api-types/v10');

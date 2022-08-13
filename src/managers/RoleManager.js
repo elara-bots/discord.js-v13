@@ -9,7 +9,7 @@ const DataResolver = require('../util/DataResolver');
 const Permissions = require('../util/Permissions');
 const { resolveColor } = require('../util/Util');
 const Util = require('../util/Util');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 let cacheWarningEmitted = false;
 

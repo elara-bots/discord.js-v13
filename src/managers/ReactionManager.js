@@ -2,7 +2,7 @@
 
 const CachedManager = require('./CachedManager');
 const MessageReaction = require('../structures/MessageReaction');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Manages API methods for reactions and holds their cache.

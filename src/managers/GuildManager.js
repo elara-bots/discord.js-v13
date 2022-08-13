@@ -1,7 +1,6 @@
 'use strict';
 
 const process = require('node:process');
-const { setTimeout } = require('node:timers');
 const { Collection } = require('@discordjs/collection');
 const CachedManager = require('./CachedManager');
 const { Guild } = require('../structures/Guild');
@@ -11,20 +10,7 @@ const { GuildMember } = require('../structures/GuildMember');
 const Invite = require('../structures/Invite');
 const OAuth2Guild = require('../structures/OAuth2Guild');
 const { Role } = require('../structures/Role');
-const {
-  ChannelTypes,
-  Events,
-  OverwriteTypes,
-  VerificationLevels,
-  DefaultMessageNotificationLevels,
-  ExplicitContentFilterLevels,
-  VideoQualityModes,
-} = require('../util/Constants');
-const DataResolver = require('../util/DataResolver');
-const Permissions = require('../util/Permissions');
-const SystemChannelFlags = require('../util/SystemChannelFlags');
-const { resolveColor } = require('../util/Util');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 let cacheWarningEmitted = false;
 

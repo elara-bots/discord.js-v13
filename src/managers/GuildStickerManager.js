@@ -5,7 +5,7 @@ const CachedManager = require('./CachedManager');
 const { TypeError } = require('../errors');
 const MessagePayload = require('../structures/MessagePayload');
 const { Sticker } = require('../structures/Sticker');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Manages API methods for Guild Stickers and stores their cache.

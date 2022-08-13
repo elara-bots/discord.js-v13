@@ -24,14 +24,11 @@ import {
 import { Collection } from '@discordjs/collection';
 import {
   APIActionRowComponent,
-  APIActionRowComponentTypes,
-  APIApplicationCommand,
   APIApplicationCommandInteractionData,
   APIApplicationCommandOption,
   APIApplicationCommandPermission,
   APIAuditLogChange,
   APIButtonComponent,
-  APIChannel,
   APIEmbed,
   APIEmoji,
   APIInteractionDataResolvedChannel,
@@ -48,7 +45,6 @@ import {
   APIRole,
   APISelectMenuComponent,
   APITemplateSerializedSourceGuild,
-  APITextInputComponent,
   APIUser,
   GatewayVoiceServerUpdateDispatchData,
   GatewayVoiceStateUpdateDispatchData,
@@ -57,7 +53,8 @@ import {
   Snowflake,
   LocalizationMap,
   LocaleString,
-} from 'discord-api-types/v9';
+  OAuth2Scopes
+} from 'discord-api-types/v10';
 import { REST } from "@discordjs/rest";
 import { ChildProcess } from 'node:child_process';
 import { EventEmitter } from 'node:events';
@@ -1214,7 +1211,7 @@ export class Integration extends Base {
   public role: Role | undefined;
   public enableEmoticons: boolean | null;
   public readonly roles: Collection<Snowflake, Role>;
-  public scopes: InviteScope[] | undefined;
+  public scopes: OAuth2Scopes[] | undefined;
   public syncedAt: number | undefined;
   public syncing: boolean | undefined;
   public type: IntegrationType;
@@ -2845,7 +2842,7 @@ export const Constants: {
   VoiceBasedChannelTypes: VoiceBasedChannelTypes[];
   ClientApplicationAssetTypes: ConstantsClientApplicationAssetTypes;
   IntegrationExpireBehaviors: IntegrationExpireBehaviors[];
-  InviteScopes: InviteScope[];
+  InviteScopes: OAuth2Scopes[];
   MessageTypes: MessageType[];
   SystemMessageTypes: SystemMessageType[];
   ActivityTypes: EnumHolder<typeof ActivityTypes>;
@@ -3450,7 +3447,7 @@ export type AllowedThreadTypeForNewsChannel = 'GUILD_NEWS_THREAD' | 10;
 export type AllowedThreadTypeForTextChannel = 'GUILD_PUBLIC_THREAD' | 'GUILD_PRIVATE_THREAD' | 11 | 12;
 
 export interface ClientApplicationInstallParams {
-  scopes: InviteScope[];
+  scopes: OAuth2Scopes[];
   permissions: Readonly<Permissions>;
 }
 
@@ -5017,13 +5014,14 @@ export type IntentsString =
   | 'DIRECT_MESSAGES'
   | 'DIRECT_MESSAGE_REACTIONS'
   | 'DIRECT_MESSAGE_TYPING'
-  | 'GUILD_SCHEDULED_EVENTS';
+  | 'GUILD_SCHEDULED_EVENTS'
+  | 'MESSAGE_CONTENT';
 
 export interface InviteGenerationOptions {
   permissions?: PermissionResolvable;
   guild?: GuildResolvable;
   disableGuildSelect?: boolean;
-  scopes: InviteScope[];
+  scopes: OAuth2Scopes[];
 }
 
 export type GuildInvitableChannelResolvable =
@@ -5047,20 +5045,6 @@ export interface CreateInviteOptions {
 export type IntegrationExpireBehaviors = 'REMOVE_ROLE' | 'KICK';
 
 export type InviteResolvable = string;
-
-export type InviteScope =
-  | 'applications.builds.read'
-  | 'applications.commands'
-  | 'applications.entitlements'
-  | 'applications.store.update'
-  | 'bot'
-  | 'connections'
-  | 'email'
-  | 'identify'
-  | 'guilds'
-  | 'guilds.join'
-  | 'gdm.join'
-  | 'webhook.incoming';
 
 export interface LifetimeFilterOptions<K, V> {
   excludeFromSweep?: (value: V, key: K, collection: LimitedCollection<K, V>) => boolean;

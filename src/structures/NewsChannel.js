@@ -2,7 +2,7 @@
 
 const BaseGuildTextChannel = require('./BaseGuildTextChannel');
 const { Error } = require('../errors');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Represents a guild news channel on Discord.

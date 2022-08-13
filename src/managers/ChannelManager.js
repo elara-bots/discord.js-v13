@@ -4,7 +4,7 @@ const process = require('node:process');
 const CachedManager = require('./CachedManager');
 const { Channel } = require('../structures/Channel');
 const { Events, ThreadChannelTypes } = require('../util/Constants');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 let cacheWarningEmitted = false;
 

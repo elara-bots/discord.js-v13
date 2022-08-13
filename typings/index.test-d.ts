@@ -10,8 +10,8 @@ import type {
   APIRole,
   APIButtonComponent,
   APISelectMenuComponent,
-} from 'discord-api-types/v9';
-import { AuditLogEvent } from 'discord-api-types/v9';
+} from 'discord-api-types/v10';
+import { AuditLogEvent } from 'discord-api-types/v10';
 import {
   ApplicationCommand,
   ApplicationCommandData,

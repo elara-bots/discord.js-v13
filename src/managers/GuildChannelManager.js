@@ -13,7 +13,7 @@ const { ThreadChannelTypes, ChannelTypes, VideoQualityModes } = require('../util
 const DataResolver = require('../util/DataResolver');
 const Util = require('../util/Util');
 const { resolveAutoArchiveMaxLimit } = require('../util/Util');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 let cacheWarningEmitted = false;
 

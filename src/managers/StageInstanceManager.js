@@ -4,7 +4,7 @@ const CachedManager = require('./CachedManager');
 const { TypeError, Error } = require('../errors');
 const { StageInstance } = require('../structures/StageInstance');
 const { PrivacyLevels } = require('../util/Constants');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Manages API methods for {@link StageInstance} objects and holds their cache.

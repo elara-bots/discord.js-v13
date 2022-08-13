@@ -4,7 +4,7 @@ const { Collection } = require('@discordjs/collection');
 const DataManager = require('./DataManager');
 const { TypeError } = require('../errors');
 const { Role } = require('../structures/Role');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 
 /**
  * Manages API methods for roles of a GuildMember and stores their cache.
