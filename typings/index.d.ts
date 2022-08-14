@@ -506,6 +506,7 @@ export type MappedChannelCategoryTypes = EnumValueMapped<
     GUILD_VOICE: VoiceChannel;
     GUILD_TEXT: TextChannel;
     GUILD_STAGE_VOICE: StageChannel;
+    GUILD_FORUM: GuildForumChannel
   }
 >;
 
@@ -519,6 +520,7 @@ export type CategoryChannelTypes = ExcludeEnum<
   | 'GUILD_PRIVATE_THREAD'
   | 'GUILD_CATEGORY'
   | 'GUILD_DIRECTORY'
+  | 'GUILD_FORUM'
 >;
 
 export class CategoryChannel extends GuildChannel {
@@ -1045,6 +1047,11 @@ export abstract class GuildChannel extends Channel {
   ): Readonly<Permissions> | null;
   public setPosition(position: number, options?: SetChannelPositionOptions): Promise<this>;
   public isText(): this is GuildTextBasedChannel;
+}
+
+export class GuildForumChannel extends GuildChannel {
+  public constructor(guild: Guild, data?: RawGuildChannelData, client?: Client, immediatePatch?: boolean);
+  public threads: GuildForumThreadManager;
 }
 
 export class GuildEmoji extends BaseGuildEmoji {

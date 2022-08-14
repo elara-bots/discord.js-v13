@@ -13,6 +13,7 @@ const Permissions = require('../util/Permissions');
  * - {@link CategoryChannel}
  * - {@link NewsChannel}
  * - {@link StageChannel}
+ * - {@link ForumChannel}
  * @extends {Channel}
  * @abstract
  */
