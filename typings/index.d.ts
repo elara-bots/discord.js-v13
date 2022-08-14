@@ -432,7 +432,7 @@ export class BaseGuildTextChannel extends TextBasedChannelMixin(GuildChannel) {
   public defaultAutoArchiveDuration?: ThreadAutoArchiveDuration;
   public rateLimitPerUser: number | null;
   public nsfw: boolean;
-  public threads: ThreadManager<AllowedThreadTypeForTextChannel | AllowedThreadTypeForNewsChannel>;
+  public threads: GuildTextThreadManager<AllowedThreadTypeForTextChannel | AllowedThreadTypeForNewsChannel>;
   public topic: string | null;
   public createInvite(options?: CreateInviteOptions): Promise<Invite>;
   public fetchInvites(cache?: boolean): Promise<Collection<string, Invite>>;
@@ -1119,6 +1119,7 @@ export class GuildPreview extends Base {
   public discoverySplash: string | null;
   public emojis: Collection<Snowflake, GuildPreviewEmoji>;
   public stickers: Collection<Snowflake, Sticker>;
+  public position: number | null;
   public features: GuildFeatures[];
   public icon: string | null;
   public id: Snowflake;
@@ -1838,7 +1839,7 @@ export class ModalSubmitInteraction<Cached extends CacheType = CacheType> extend
 }
 
 export class NewsChannel extends BaseGuildTextChannel {
-  public threads: ThreadManager<AllowedThreadTypeForNewsChannel>;
+  public threads: GuildTextThreadManager<AllowedThreadTypeForNewsChannel>;
   public type: 'GUILD_NEWS';
   public addFollower(channel: TextChannelResolvable, reason?: string): Promise<NewsChannel>;
 }
@@ -2287,7 +2288,7 @@ export class TeamMember extends Base {
 
 export class TextChannel extends BaseGuildTextChannel {
   public rateLimitPerUser: number;
-  public threads: ThreadManager<AllowedThreadTypeForTextChannel>;
+  public threads: GuildTextThreadManager<AllowedThreadTypeForTextChannel>;
   public type: 'GUILD_TEXT';
 }
 
@@ -2335,6 +2336,7 @@ export class ThreadChannel extends TextBasedChannelMixin(Channel, ['fetchWebhook
   public readonly sendable: boolean;
   public memberCount: number | null;
   public messageCount: number | null;
+  public totalMessageSent: number | null;
   public members: ThreadMemberManager;
   public name: string;
   public ownerId: Snowflake | null;
@@ -3295,14 +3297,21 @@ export class StageInstanceManager extends CachedManager<Snowflake, StageInstance
   public delete(channel: StageChannelResolvable): Promise<void>;
 }
 
-export class ThreadManager<AllowedThreadType> extends CachedManager<Snowflake, ThreadChannel, ThreadChannelResolvable> {
-  private constructor(channel: TextChannel | NewsChannel, iterable?: Iterable<RawThreadChannelData>);
+export class ThreadManager extends CachedManager<Snowflake, ThreadChannel, ThreadChannelResolvable> {
+  public constructor(channel: TextChannel | NewsChannel, iterable?: Iterable<RawThreadChannelData>);
   public channel: TextChannel | NewsChannel;
-  public create(options: ThreadCreateOptions<AllowedThreadType>): Promise<ThreadChannel>;
   public fetch(options: ThreadChannelResolvable, cacheOptions?: BaseFetchOptions): Promise<ThreadChannel | null>;
   public fetch(options?: FetchThreadsOptions, cacheOptions?: { cache?: boolean }): Promise<FetchedThreads>;
   public fetchArchived(options?: FetchArchivedThreadOptions, cache?: boolean): Promise<FetchedThreads>;
   public fetchActive(cache?: boolean): Promise<FetchedThreads>;
+}
+
+export class GuildTextThreadManager<AllowedThreadType> extends ThreadManager {
+  public create(options: GuildTextThreadCreateOptions<AllowedThreadType>): Promise<ThreadChannel>;
+}
+
+export class GuildForumThreadManager extends ThreadManager {
+  public create(options: GuildForumThreadCreateOptions): Promise<ThreadChannel>;
 }
 
 export class ThreadMemberManager extends CachedManager<Snowflake, ThreadMember, ThreadMemberResolvable> {
@@ -5743,11 +5752,15 @@ export type ThreadChannelResolvable = ThreadChannel | Snowflake;
 
 export type ThreadChannelTypes = 'GUILD_NEWS_THREAD' | 'GUILD_PUBLIC_THREAD' | 'GUILD_PRIVATE_THREAD';
 
-export interface ThreadCreateOptions<AllowedThreadType> extends StartThreadOptions {
+export interface GuildTextThreadCreateOptions<AllowedThreadType> extends StartThreadOptions {
   startMessage?: MessageResolvable;
   type?: AllowedThreadType;
   invitable?: AllowedThreadType extends 'GUILD_PRIVATE_THREAD' | 12 ? boolean : never;
   rateLimitPerUser?: number;
+}
+
+export interface GuildForumThreadCreateOptions extends StartThreadOptions {
+  message: MessageOptions | MessagePayload;
 }
 
 export interface ThreadEditData {
@@ -5757,6 +5770,7 @@ export interface ThreadEditData {
   rateLimitPerUser?: number;
   locked?: boolean;
   invitable?: boolean;
+  threadName?: string;
 }
 
 export type ThreadMemberFlagsString = '';

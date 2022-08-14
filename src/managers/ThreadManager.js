@@ -5,12 +5,10 @@ const { makeURLSearchParams } = require("@discordjs/rest");
 const CachedManager = require('./CachedManager');
 const { TypeError } = require('../errors');
 const ThreadChannel = require('../structures/ThreadChannel');
-const { ChannelTypes } = require('../util/Constants');
-const { resolveAutoArchiveMaxLimit } = require('../util/Util');
 const { Routes } = require('discord-api-types/v10');
 
 /**
- * Manages API methods for {@link ThreadChannel} objects and stores their cache.
+ * Manages API methods for thread based channels objects and stores their cache.
  * @extends {CachedManager}
  */
 class ThreadManager extends CachedManager {
@@ -19,10 +17,16 @@ class ThreadManager extends CachedManager {
 
     /**
      * The channel this Manager belongs to
-     * @type {NewsChannel|TextChannel}
+     * @type {NewsChannel|TextChannel|GuildForumChannel}
      */
     this.channel = channel;
   }
+  /**
+   * Data that can be resolved to a Thread Channel object. This can be:
+   * * A ThreadChannel object
+   * * A Snowflake
+   * @typedef {ThreadChannel|Snowflake} ThreadChannelResolvable
+   */
 
   /**
    * The cache of this Manager
@@ -74,71 +78,6 @@ class ThreadManager extends CachedManager {
    * <info>Can only be set when type will be `GUILD_PRIVATE_THREAD`</info>
    * @property {number} [rateLimitPerUser] The rate limit per user (slowmode) for the new channel in seconds
    */
-
-  /**
-   * Creates a new thread in the channel.
-   * @param {ThreadCreateOptions} [options] Options to create a new thread
-   * @returns {Promise<ThreadChannel>}
-   * @example
-   * // Create a new public thread
-   * channel.threads
-   *   .create({
-   *     name: 'food-talk',
-   *     autoArchiveDuration: 60,
-   *     reason: 'Needed a separate thread for food',
-   *   })
-   *   .then(threadChannel => console.log(threadChannel))
-   *   .catch(console.error);
-   * @example
-   * // Create a new private thread
-   * channel.threads
-   *   .create({
-   *      name: 'mod-talk',
-   *      autoArchiveDuration: 60,
-   *      type: 'GUILD_PRIVATE_THREAD',
-   *      reason: 'Needed a separate thread for moderation',
-   *    })
-   *   .then(threadChannel => console.log(threadChannel))
-   *   .catch(console.error);
-   */
-  async create({
-    name,
-    autoArchiveDuration = this.channel.defaultAutoArchiveDuration,
-    startMessage,
-    type,
-    invitable,
-    reason,
-    rateLimitPerUser,
-  } = {}) {
-    let path = Routes.threads(this.channel.id);
-    if (type && typeof type !== 'string' && typeof type !== 'number') {
-      throw new TypeError('INVALID_TYPE', 'type', 'ThreadChannelType or Number');
-    }
-    let resolvedType =
-      this.channel.type === 'GUILD_NEWS' ? ChannelTypes.GUILD_NEWS_THREAD : ChannelTypes.GUILD_PUBLIC_THREAD;
-    if (startMessage) {
-      const startMessageId = this.channel.messages.resolveId(startMessage);
-      if (!startMessageId) throw new TypeError('INVALID_TYPE', 'startMessage', 'MessageResolvable');
-      path = Routes.threads(this.channel.id, startMessageId);
-    } else if (this.channel.type !== 'GUILD_NEWS') {
-      resolvedType = typeof type === 'string' ? ChannelTypes[type] : type ?? resolvedType;
-    }
-
-    if (autoArchiveDuration === 'MAX') autoArchiveDuration = resolveAutoArchiveMaxLimit(this.channel.guild);
-
-    const data = await this.client.rest.post(path, {
-      body: {
-        name,
-        auto_archive_duration: autoArchiveDuration,
-        type: resolvedType,
-        invitable: resolvedType === ChannelTypes.GUILD_PRIVATE_THREAD ? invitable : undefined,
-        rate_limit_per_user: rateLimitPerUser,
-      },
-      reason,
-    })
-
-    return this.client.actions.ThreadCreate.handle(data).thread;
-  }
 
   /**
    * The options for fetching multiple threads, the properties are mutually exclusive
