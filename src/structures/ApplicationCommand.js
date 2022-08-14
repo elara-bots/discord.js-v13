@@ -146,6 +146,15 @@ class ApplicationCommand extends Base {
       this.dmPermission ??= null;
     }
 
+    if ('nsfw' in data) {
+      /**
+       * Whether this command is NSFW
+       */
+      this.nsfw = data.nsfw
+    } else {
+      this.nsfw ??= null;
+    }
+
     if ('version' in data) {
       /**
        * Autoincrementing version identifier updated during substantial record changes

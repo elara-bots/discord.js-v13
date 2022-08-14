@@ -245,6 +245,7 @@ export class ApplicationCommand<PermissionsFetchType = {}> extends Base {
     Snowflake
   >;
   public type: ApplicationCommandType;
+  public nsfw: boolean;
   public version: Snowflake;
   public delete(): Promise<ApplicationCommand<PermissionsFetchType>>;
   public edit(data: Partial<ApplicationCommandData>): Promise<ApplicationCommand<PermissionsFetchType>>;
@@ -3617,6 +3618,7 @@ export interface BaseApplicationCommandData {
   nameLocalizations?: LocalizationMap;
   defaultMemberPermissions?: PermissionResolvable | null;
   dmPermission?: boolean;
+  nsfw?: boolean;
 }
 
 export type CommandOptionDataTypeResolvable = ApplicationCommandOptionType | ApplicationCommandOptionTypes;
