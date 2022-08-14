@@ -643,6 +643,7 @@ exports.ChannelTypes = createEnum([
   'GUILD_PRIVATE_THREAD',
   'GUILD_STAGE_VOICE',
   'GUILD_DIRECTORY',
+  'GUILD_FORUM'
 ]);
 
 /**

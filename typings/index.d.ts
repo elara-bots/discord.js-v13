@@ -3944,6 +3944,7 @@ export interface CategoryCreateChannelOptions {
     | 'GUILD_NEWS_THREAD'
     | 'GUILD_PRIVATE_THREAD'
     | 'GUILD_CATEGORY'
+    | 'GUILD_FORUM'
   >;
   nsfw?: boolean;
   bitrate?: number;

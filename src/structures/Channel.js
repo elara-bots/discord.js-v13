@@ -9,6 +9,7 @@ let TextChannel;
 let ThreadChannel;
 let VoiceChannel;
 let DirectoryChannel;
+let GuildForumChannel;
 const { ChannelTypes, ThreadChannelTypes, VoiceBasedChannelTypes } = require('../util/Constants');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
 const { Routes } = require('discord-api-types/v10');
@@ -144,6 +145,7 @@ class Channel extends Base {
     ThreadChannel ??= require('./ThreadChannel');
     VoiceChannel ??= require('./VoiceChannel');
     DirectoryChannel ??= require('./DirectoryChannel');
+    GuildForumChannel ??= require("./GuildForumChannel");
 
     let channel;
     if (!data.guild_id && !guild) {
@@ -183,6 +185,11 @@ class Channel extends Base {
           case ChannelTypes.GUILD_PRIVATE_THREAD: {
             channel = new ThreadChannel(guild, data, client, fromInteraction);
             if (!allowUnknownGuild) channel.parent?.threads.cache.set(channel.id, channel);
+            break;
+          }
+
+          case ChannelTypes.GUILD_FORUM: {
+            channel = new GuildForumChannel(guild, data, client);
             break;
           }
 
