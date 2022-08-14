@@ -333,10 +333,21 @@ class Guild extends AnonymousGuild {
       this.maxVideoChannelUsers ??= null;
     }
 
+    if ('max_stage_video_channel_users' in data) {
+      /**
+       * The maximum amount of users allowed in a stage video channel.
+       * <info>You will need to fetch the guild using {@link Guild#fetch} if you want to receive this property.</info>
+       * @type {?number}
+       */
+      this.maxStageVideoChannelUsers = data.max_stage_video_channel_users;
+    } else {
+      this.maxStageVideoChannelUsers ??= null;
+    }
+
     if ('approximate_member_count' in data) {
       /**
        * The approximate amount of members the guild has
-       * <info>You will need to fetch the guild using {@link Guild#fetch} if you want to receive this parameter</info>
+       * <info>You will need to fetch the guild using {@link Guild#fetch} if you want to receive this property</info>
        * @type {?number}
        */
       this.approximateMemberCount = data.approximate_member_count;
@@ -347,7 +358,7 @@ class Guild extends AnonymousGuild {
     if ('approximate_presence_count' in data) {
       /**
        * The approximate amount of presences the guild has
-       * <info>You will need to fetch the guild using {@link Guild#fetch} if you want to receive this parameter</info>
+       * <info>You will need to fetch the guild using {@link Guild#fetch} if you want to receive this property</info>
        * @type {?number}
        */
       this.approximatePresenceCount = data.approximate_presence_count;
