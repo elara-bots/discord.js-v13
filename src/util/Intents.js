@@ -43,6 +43,8 @@ class Intents extends BitField {}
  * * `DIRECT_MESSAGE_TYPING`
  * * `GUILD_SCHEDULED_EVENTS`
  * * `MESSAGE_CONTENT`
+ * * `AUTO_MODERATION_CONFIGURATION`
+ * * `AUTO_MODERATION_EXECUTION`
  * @type {Object}
  * @see {@link https://discord.com/developers/docs/topics/gateway#list-of-intents}
  */
@@ -63,7 +65,9 @@ Intents.FLAGS = {
   DIRECT_MESSAGE_REACTIONS: GatewayIntentBits.DirectMessageReactions,
   DIRECT_MESSAGE_TYPING: GatewayIntentBits.DirectMessageTyping,
   GUILD_SCHEDULED_EVENTS: GatewayIntentBits.GuildScheduledEvents,
-  MESSAGE_CONTENT: GatewayIntentBits.MessageContent
+  MESSAGE_CONTENT: GatewayIntentBits.MessageContent,
+  AUTO_MODERATION_CONFIGURATION: 1 << 20,
+  AUTO_MODERATION_EXECUTION: 1 << 21,
 };
 
 module.exports = Intents;

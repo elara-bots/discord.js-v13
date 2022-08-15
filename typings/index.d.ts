@@ -5035,7 +5035,9 @@ export type IntentsString =
   | 'DIRECT_MESSAGE_REACTIONS'
   | 'DIRECT_MESSAGE_TYPING'
   | 'GUILD_SCHEDULED_EVENTS'
-  | 'MESSAGE_CONTENT';
+  | 'MESSAGE_CONTENT'
+  | 'AUTO_MODERATION_CONFIGURATION'
+  | 'AUTO_MODERATION_EXECUTION';
 
 export interface InviteGenerationOptions {
   permissions?: PermissionResolvable;
