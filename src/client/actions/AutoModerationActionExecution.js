@@ -2,7 +2,7 @@
 
 const Action = require('./Action');
 const AutoModerationActionExecution = require('../../structures/AutoModerationActionExecution');
-const Events = require('../../util/Events');
+const { Events } = require('../../util/Constants');
 
 class AutoModerationActionExecutionAction extends Action {
   handle(data) {
