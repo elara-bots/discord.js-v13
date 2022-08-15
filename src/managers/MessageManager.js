@@ -68,8 +68,8 @@ class MessageManager extends CachedManager {
    *   .catch(console.error);
    */
   fetch(message, options) {
-    let cache = 'cache' in options ? options.cache : 'cache' in message ? message.cache : true;
-    if (typeof message === 'string') return this._fetchId(message, cache, 'force' in options ? options.force : false)
+    let cache = message?.cache ?? options?.cache ?? true;
+    if (typeof message === 'string') return this._fetchId(message, cache, (message || options)?.force ?? false)
     return this._fetchMany(typeof message === 'object' ? message : options);
   }
 
