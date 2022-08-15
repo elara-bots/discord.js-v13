@@ -2,6 +2,7 @@
 
 const { Collection } = require('@discordjs/collection');
 const { GuildScheduledEvent } = require('./GuildScheduledEvent');
+const AutoModerationRule = require('./AutoModerationRule');
 const Integration = require('./Integration');
 const Invite = require('./Invite');
 const { StageInstance } = require('./StageInstance');
@@ -49,6 +50,7 @@ const Targets = {
   STAGE_INSTANCE: 'STAGE_INSTANCE',
   STICKER: 'STICKER',
   THREAD: 'THREAD',
+  AUTO_MODERATION: 'AUTO_MODERATION',
   UNKNOWN: 'UNKNOWN',
 };
 
@@ -102,6 +104,10 @@ const Targets = {
  * * THREAD_CREATE: 110
  * * THREAD_UPDATE: 111
  * * THREAD_DELETE: 112
+ * * AUTO_MODERATION_RULE_CREATE: 140
+ * * AUTO_MODERATION_RULE_UPDATE: 141
+ * * AUTO_MODERATION_RULE_DELETE: 142
+ * * AUTO_MODERATION_BLOCK_MESSAGE: 143
  * @typedef {?(number|string)} AuditLogAction
  * @see {@link https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events}
  */
@@ -160,6 +166,10 @@ const Actions = {
   THREAD_CREATE: 110,
   THREAD_UPDATE: 111,
   THREAD_DELETE: 112,
+  AUTO_MODERATION_RULE_CREATE: 140,
+  AUTO_MODERATION_RULE_UPDATE: 141,
+  AUTO_MODERATION_RULE_DELETE: 142,
+  AUTO_MODERATION_BLOCK_MESSAGE: 143,
 };
 
 /**
@@ -192,6 +202,17 @@ class GuildAuditLogs {
         this.integrations.set(integration.id, new Integration(guild.client, integration, guild));
       }
     }
+
+    /**
+    * Cached auto moderation rules.
+    * @type {Collection<Snowflake, AutoModerationRule>}
+    * @private
+    */
+    this.autoModerationRules = data.auto_moderation_rules.reduce(
+      (autoModerationRules, autoModerationRule) =>
+        autoModerationRules.set(autoModerationRule.id, guild.autoModerationRules._add(autoModerationRule)),
+      new Collection(),
+    );
 
     /**
      * The entries for this guild's audit logs
@@ -229,10 +250,11 @@ class GuildAuditLogs {
    * * A sticker
    * * A guild scheduled event
    * * A thread
+   * * An auto moderation rule
    * * An object with an id key if target was deleted
    * * An object where the keys represent either the new value or the old value
    * @typedef {?(Object|Guild|Channel|User|Role|Invite|Webhook|GuildEmoji|Message|Integration|StageInstance|Sticker|
-   * GuildScheduledEvent)} AuditLogEntryTarget
+   * GuildScheduledEvent|AutoModerationRule)} AuditLogEntryTarget
    */
 
   /**
@@ -254,6 +276,7 @@ class GuildAuditLogs {
     if (target < 100) return Targets.STICKER;
     if (target < 110) return Targets.GUILD_SCHEDULED_EVENT;
     if (target < 120) return Targets.THREAD;
+    if (target >= 140 && target < 150) return Targets.AUTO_MODERATION;
     return Targets.UNKNOWN;
   }
 
@@ -590,7 +613,21 @@ class GuildAuditLogsEntry {
             { id: data.target_id },
           ),
         );
-    } else if (targetType === Targets.GUILD_SCHEDULED_EVENT) {
+    } else if (targetType === Targets.AUTO_MODERATION) {
+      this.target =
+        guild.autoModerationRules.cache.get(data.target_id) ??
+        new AutoModerationRule(
+          guild.client,
+          this.changes.reduce(
+            (o, c) => {
+              o[c.key] = c.new ?? c.old;
+              return o;
+            },
+            { id: data.target_id, guild_id: guild.id },
+          ),
+          guild,
+        )
+      } else if (targetType === Targets.GUILD_SCHEDULED_EVENT) {
       this.target =
         guild.scheduledEvents.cache.get(data.target_id) ??
         new GuildScheduledEvent(

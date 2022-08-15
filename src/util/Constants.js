@@ -260,6 +260,10 @@ exports.Events = {
   GUILD_EMOJI_UPDATE: 'emojiUpdate',
   GUILD_BAN_ADD: 'guildBanAdd',
   GUILD_BAN_REMOVE: 'guildBanRemove',
+  AUTO_MODERATION_ACTION_EXECUTION: 'autoModerationActionExecution',
+  AUTO_MODERATION_RULE_CREATE: 'autoModerationRuleCreate',
+  AUTO_MODERATION_RULE_DELETE: 'autoModerationRuleDelete',
+  AUTO_MODERATION_RULE_UPDATE: 'autoModerationRuleUpdate',
   CHANNEL_CREATE: 'channelCreate',
   CHANNEL_DELETE: 'channelDelete',
   CHANNEL_UPDATE: 'channelUpdate',
@@ -553,6 +557,7 @@ exports.MessageTypes = [
 
 /**
  * The name of an item to be swept in Sweepers
+ * * `autoModerationRules`
  * * `applicationCommands` - both global and guild commands
  * * `bans`
  * * `emojis`
@@ -570,6 +575,7 @@ exports.MessageTypes = [
  * @typedef {string} SweeperKey
  */
 exports.SweeperKeys = [
+  'autoModerationRules',
   'applicationCommands',
   'bans',
   'emojis',
