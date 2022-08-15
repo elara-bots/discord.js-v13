@@ -17,7 +17,7 @@ class AutoModerationRuleCreateAction extends Action {
        * @event Client#autoModerationRuleCreate
        * @param {AutoModerationRule} autoModerationRule The created auto moderation rule
        */
-      client.emit(Events.AutoModerationRuleCreate, autoModerationRule);
+      client.emit(Events.AUTO_MODERATION_RULE_CREATE, autoModerationRule);
     }
 
     return {};
