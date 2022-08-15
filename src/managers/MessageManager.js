@@ -1,6 +1,7 @@
 'use strict';
 
 const { Collection } = require('@discordjs/collection');
+const { makeURLSearchParams } = require("@discordjs/rest");
 const CachedManager = require('./CachedManager');
 const { TypeError } = require('../errors');
 const { Message } = require('../structures/Message');
@@ -66,8 +67,10 @@ class MessageManager extends CachedManager {
    *   .then(messages => console.log(`${messages.filter(m => m.author.id === '84484653687267328').size} messages`))
    *   .catch(console.error);
    */
-  fetch(message, { cache = true, force = false } = {}) {
-    return typeof message === 'string' ? this._fetchId(message, cache, force) : this._fetchMany(message, cache);
+  fetch(message, options) {
+    let cache = 'cache' in options ? options.cache : 'cache' in message ? message.cache : true;
+    if (typeof message === 'string') return this._fetchId(message, cache, 'force' in options ? options.force : false)
+    return this._fetchMany(typeof message === 'object' ? message : options);
   }
 
   /**
@@ -221,8 +224,9 @@ class MessageManager extends CachedManager {
     return this._add(data, cache);
   }
 
-  async _fetchMany(options = {}, cache) {
-    const data = await this.client.rest.get(Routes.channelMessages(this.channel.id), { query: options });
+  async _fetchMany(options = {}) {
+    const { cache } = options || { cache: true };
+    const data = await this.client.rest.get(Routes.channelMessages(this.channel.id), { query: makeURLSearchParams(options) });
     const messages = new Collection();
     for (const message of data) messages.set(message.id, this._add(message, cache));
     return messages;
