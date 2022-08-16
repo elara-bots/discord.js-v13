@@ -78,7 +78,7 @@ class Application extends Base {
    */
   iconURL({ format, size } = {}) {
     if (!this.icon) return null;
-    return this.client.rest.cdn.appIcon(this.id, this.icon, { format, size });
+    return this.client.rest.cdn.appIcon(this.id, this.icon, { forceStatic: format ? true : false, size, extension: format });
   }
 
   /**
@@ -88,7 +88,7 @@ class Application extends Base {
    */
   coverURL({ format, size } = {}) {
     if (!this.cover) return null;
-    return Endpoints.CDN(this.client.options.http.cdn).AppIcon(this.id, this.cover, { format, size });
+    return Endpoints.CDN(this.client.options.http.cdn).AppIcon(this.id, this.cover, { forceStatic: format ? true : false, size, extension: format });
   }
 
   /**

@@ -88,7 +88,7 @@ class StickerPack extends Base {
    * @returns {?string}
    */
   bannerURL({ format, size } = {}) {
-    return this.bannerId && this.client.rest.cdn.stickerPackBanner(this.bannerId, format, size);
+    return this.bannerId && this.client.rest.cdn.stickerPackBanner(this.bannerId, { forceStatic: format ? true : false, size, extension: format });
   }
 }
 

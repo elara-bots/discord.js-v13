@@ -146,7 +146,7 @@ class User extends Base {
    */
   avatarURL({ format, size, dynamic } = {}) {
     if (!this.avatar) return null;
-    return this.client.rest.cdn.avatar(this.id, this.avatar, { extension: format, size, forceStatic: dynamic === true ? false : true })
+    return this.client.rest.cdn.avatar(this.id, this.avatar, { extension: format, size, forceStatic: dynamic ? false : true })
   }
 
   /**
@@ -189,7 +189,10 @@ class User extends Base {
   bannerURL({ format, size, dynamic } = {}) {
     if (typeof this.banner === 'undefined') throw new Error('USER_BANNER_NOT_FETCHED');
     if (!this.banner) return null;
-    return this.client.rest.cdn.banner(this.id, this.banner, format, size, dynamic);
+    return this.client.rest.cdn.banner(this.id, this.banner, {
+      size, forceStatic: dynamic ? false : true,
+      extension: format
+    });
   }
 
   /**

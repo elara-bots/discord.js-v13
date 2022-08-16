@@ -42,7 +42,7 @@ class PartialGroupDMChannel extends Channel {
    * @returns {?string}
    */
   iconURL({ format, size } = {}) {
-    return this.icon && this.client.rest.cdn.channelIcon(this.id, this.icon, format, size);
+    return this.icon && this.client.rest.cdn.channelIcon(this.id, this.icon, { forceStatic: format ? true : false, size, extension: format });
   }
 
   delete() {

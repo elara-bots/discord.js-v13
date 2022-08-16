@@ -174,7 +174,7 @@ class GuildScheduledEvent extends Base {
    * @returns {?string}
    */
   coverImageURL({ format, size } = {}) {
-    return this.image && this.client.rest.cdn.guildScheduledEventCover(this.id, this.image, format, size);
+    return this.image && this.client.rest.cdn.guildScheduledEventCover(this.id, this.image, { forceStatic: format ? true : false, size, extension: format });
   }
 
   /**
