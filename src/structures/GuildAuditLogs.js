@@ -498,7 +498,14 @@ class GuildAuditLogsEntry {
           channel: guild.client.channels.cache.get(data.options?.channel_id) ?? { id: data.options?.channel_id },
         };
         break;
-
+      case 143:
+      case 144:
+      case 145:
+        this.extra = {
+          autoModerationRuleName: data.options.auto_moderation_rule_name,
+          autoModerationRuleTriggerType: data.options.auto_moderation_rule_trigger_type,
+        };
+        break;
       default:
         break;
     }
