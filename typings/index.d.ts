@@ -3974,8 +3974,10 @@ export interface AwaitReactionsOptions extends ReactionCollectorOptions {
 }
 
 export interface BanOptions {
-  days?: number;
+  deleteMessageSeconds?: number;
   reason?: string;
+  /** @deprecated Use 'deleteMessageSeconds' instead! */
+  days?: number;
 }
 
 export type Base64Resolvable = Buffer | Base64String;
