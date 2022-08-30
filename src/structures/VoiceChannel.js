@@ -43,14 +43,6 @@ class VoiceChannel extends BaseGuildVoiceChannel {
       this.videoQualityMode ??= null;
     }
 
-    if ('last_message_id' in data) {
-      /**
-       * The last message id sent in the channel, if one was sent
-       * @type {?Snowflake}
-       */
-      this.lastMessageId = data.last_message_id;
-    }
-
     if ('messages' in data) {
       for (const message of data.messages) this.messages._add(message);
     }
@@ -107,7 +99,6 @@ class VoiceChannel extends BaseGuildVoiceChannel {
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
   /* eslint-disable no-empty-function */
   // eslint-disable-next-line getter-return
-  get lastMessage() {}
   send() {}
   sendTyping() {}
   createMessageCollector() {}

@@ -1,6 +1,5 @@
 'use strict';
 
-const process = require('node:process');
 const { Collection } = require('@discordjs/collection');
 const CachedManager = require('./CachedManager');
 const GuildTextThreadManager = require('./GuildTextThreadManager');
@@ -15,8 +14,6 @@ const Util = require('../util/Util');
 const { resolveAutoArchiveMaxLimit } = require('../util/Util');
 const { Routes } = require('discord-api-types/v10');
 
-let cacheWarningEmitted = false;
-
 /**
  * Manages API methods for GuildChannels and stores their cache.
  * @extends {CachedManager}
@@ -24,17 +21,6 @@ let cacheWarningEmitted = false;
 class GuildChannelManager extends CachedManager {
   constructor(guild, iterable) {
     super(guild.client, GuildChannel, iterable);
-    const defaultCaching =
-      this._cache.constructor.name === 'Collection' ||
-      ((this._cache.maxSize === undefined || this._cache.maxSize === Infinity) &&
-        (this._cache.sweepFilter === undefined || this._cache.sweepFilter.isDefault));
-    if (!cacheWarningEmitted && !defaultCaching) {
-      cacheWarningEmitted = true;
-      process.emitWarning(
-        `Overriding the cache handling for ${this.constructor.name} is unsupported and breaks functionality.`,
-        'UnsupportedCacheOverwriteWarning',
-      );
-    }
 
     /**
      * The guild this Manager belongs to

@@ -1,12 +1,9 @@
 'use strict';
 
-const process = require('node:process');
 const CachedManager = require('./CachedManager');
 const { Channel } = require('../structures/Channel');
 const { Events, ThreadChannelTypes } = require('../util/Constants');
 const { Routes } = require('discord-api-types/v10');
-
-let cacheWarningEmitted = false;
 
 /**
  * A manager of channels belonging to a client
@@ -15,17 +12,6 @@ let cacheWarningEmitted = false;
 class ChannelManager extends CachedManager {
   constructor(client, iterable) {
     super(client, Channel, iterable);
-    const defaultCaching =
-      this._cache.constructor.name === 'Collection' ||
-      ((this._cache.maxSize === undefined || this._cache.maxSize === Infinity) &&
-        (this._cache.sweepFilter === undefined || this._cache.sweepFilter.isDefault));
-    if (!cacheWarningEmitted && !defaultCaching) {
-      cacheWarningEmitted = true;
-      process.emitWarning(
-        `Overriding the cache handling for ${this.constructor.name} is unsupported and breaks functionality.`,
-        'UnsupportedCacheOverwriteWarning',
-      );
-    }
   }
 
   /**

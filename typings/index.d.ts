@@ -945,7 +945,6 @@ export class Guild extends AnonymousGuild {
   private _sortedRoles(): Collection<Snowflake, Role>;
   private _sortedChannels(channel: NonThreadGuildBasedChannel): Collection<Snowflake, NonThreadGuildBasedChannel>;
 
-  public readonly afkChannel: VoiceChannel | null;
   public afkChannelId: Snowflake | null;
   public afkTimeout: number;
   public applicationId: Snowflake | null;
@@ -978,43 +977,32 @@ export class Guild extends AnonymousGuild {
   public premiumProgressBarEnabled: boolean;
   public premiumTier: PremiumTier;
   public presences: PresenceManager;
-  public readonly publicUpdatesChannel: TextChannel | null;
   public publicUpdatesChannelId: Snowflake | null;
   public roles: RoleManager;
-  public readonly rulesChannel: TextChannel | null;
   public rulesChannelId: Snowflake | null;
   public scheduledEvents: GuildScheduledEventManager;
   public readonly shard: WebSocketShard;
   public shardId: number;
   public stageInstances: StageInstanceManager;
   public stickers: GuildStickerManager;
-  public readonly systemChannel: TextChannel | null;
   public systemChannelFlags: Readonly<SystemChannelFlags>;
   public systemChannelId: Snowflake | null;
   public vanityURLUses: number | null;
   public readonly voiceAdapterCreator: InternalDiscordGatewayAdapterCreator;
   public readonly voiceStates: VoiceStateManager;
-  public readonly widgetChannel: TextChannel | null;
   public widgetChannelId: Snowflake | null;
   public widgetEnabled: boolean | null;
   public readonly maximumBitrate: number;
-  public createTemplate(name: string, description?: string): Promise<GuildTemplate>;
   public discoverySplashURL(options?: StaticImageURLOptions): string | null;
   public edit(data: GuildEditData, reason?: string): Promise<Guild>;
-  public editWelcomeScreen(data: WelcomeScreenEditData): Promise<WelcomeScreen>;
   public equals(guild: Guild): boolean;
   public fetchAuditLogs<T extends GuildAuditLogsResolvable = 'ALL'>(
     options?: GuildAuditLogsFetchOptions<T>,
   ): Promise<GuildAuditLogs<T>>;
   public fetchIntegrations(): Promise<Collection<Snowflake | string, Integration>>;
   public fetchOwner(options?: BaseFetchOptions): Promise<GuildMember>;
-  public fetchPreview(): Promise<GuildPreview>;
-  public fetchTemplates(): Promise<Collection<GuildTemplate['code'], GuildTemplate>>;
   public fetchVanityData(): Promise<Vanity>;
   public fetchWebhooks(): Promise<Collection<Snowflake, Webhook>>;
-  public fetchWelcomeScreen(): Promise<WelcomeScreen>;
-  public fetchWidget(): Promise<Widget>;
-  public fetchWidgetSettings(): Promise<GuildWidgetSettings>;
   public leave(): Promise<Guild>;
   public toJSON(): unknown;
 }
@@ -1446,7 +1434,6 @@ export class InviteStageInstance extends Base {
 
 export class InviteGuild extends AnonymousGuild {
   private constructor(client: Client, data: RawInviteGuildData);
-  public welcomeScreen: WelcomeScreen | null;
 }
 
 export class LimitedCollection<K, V> extends Collection<K, V> {
@@ -2583,7 +2570,7 @@ export class Formatters extends null {
   public static userMention: typeof userMention;
 }
 
-export class VoiceChannel extends TextBasedChannelMixin(BaseGuildVoiceChannel, ['lastPinTimestamp', 'lastPinAt']) {
+export class VoiceChannel extends TextBasedChannel {
   public videoQualityMode: VideoQualityMode | null;
   public readonly editable: boolean;
   public readonly speakable: boolean;
@@ -2796,14 +2783,6 @@ export class WelcomeChannel extends Base {
   public description: string;
   public readonly channel: TextChannel | NewsChannel | null;
   public readonly emoji: GuildEmoji | Emoji;
-}
-
-export class WelcomeScreen extends Base {
-  private constructor(guild: Guild, data: RawWelcomeScreenData);
-  public readonly enabled: boolean;
-  public guild: Guild | InviteGuild;
-  public description: string | null;
-  public welcomeChannels: Collection<Snowflake, WelcomeChannel>;
 }
 
 //#endregion
@@ -3452,10 +3431,6 @@ export interface PartialTextBasedChannelFields {
 }
 
 export interface TextBasedChannelFields extends PartialTextBasedChannelFields {
-  lastMessageId: Snowflake | null;
-  readonly lastMessage: Message | null;
-  lastPinTimestamp: number | null;
-  readonly lastPinAt: Date | null;
   messages: MessageManager;
   awaitMessageComponent<T extends MessageComponentTypeResolvable = 'ACTION_ROW'>(
     options?: AwaitMessageCollectorOptionsParams<T, true>,
@@ -3498,7 +3473,6 @@ export interface WebhookFields extends PartialWebhookFields {
   readonly createdTimestamp: number;
   delete(reason?: string): Promise<void>;
   edit(options: WebhookEditData, reason?: string): Promise<Webhook>;
-  sendSlackMessage(body: unknown): Promise<boolean>;
 }
 
 //#endregion
@@ -5649,8 +5623,7 @@ export type Partialize<
   [K in keyof Omit<T, 'client' | 'id' | 'partial' | E>]: K extends N ? null : K extends M ? T[K] | null : T[K];
 };
 
-export interface PartialDMChannel extends Partialize<DMChannel, null, null, 'lastMessageId'> {
-  lastMessageId: undefined;
+export interface PartialDMChannel extends Partialize<DMChannel, null, null, 'id'> {
 }
 
 export interface PartialGuildMember extends Partialize<GuildMember, 'joinedAt' | 'joinedTimestamp'> {}

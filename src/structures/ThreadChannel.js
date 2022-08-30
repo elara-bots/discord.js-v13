@@ -127,26 +127,6 @@ class ThreadChannel extends Channel {
       this.ownerId ??= null;
     }
 
-    if ('last_message_id' in data) {
-      /**
-       * The last message id sent in this thread, if one was sent
-       * @type {?Snowflake}
-       */
-      this.lastMessageId = data.last_message_id;
-    } else {
-      this.lastMessageId ??= null;
-    }
-
-    if ('last_pin_timestamp' in data) {
-      /**
-       * The timestamp when the last pinned message was pinned, if there was one
-       * @type {?number}
-       */
-      this.lastPinTimestamp = data.last_pin_timestamp ? new Date(data.last_pin_timestamp).getTime() : null;
-    } else {
-      this.lastPinTimestamp ??= null;
-    }
-
     if ('rate_limit_per_user' in data || !partial) {
       /**
        * The rate limit per user (slowmode) for this thread in seconds
@@ -506,8 +486,6 @@ class ThreadChannel extends Channel {
 
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
   /* eslint-disable no-empty-function */
-  get lastMessage() {}
-  get lastPinAt() {}
   send() {}
   sendTyping() {}
   createMessageCollector() {}

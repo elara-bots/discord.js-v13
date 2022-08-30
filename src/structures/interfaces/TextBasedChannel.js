@@ -20,36 +20,6 @@ class TextBasedChannel {
      * @type {MessageManager}
      */
     this.messages = new MessageManager(this);
-
-    /**
-     * The channel's last message id, if one was sent
-     * @type {?Snowflake}
-     */
-    this.lastMessageId = null;
-
-    /**
-     * The timestamp when the last pinned message was pinned, if there was one
-     * @type {?number}
-     */
-    this.lastPinTimestamp = null;
-  }
-
-  /**
-   * The Message object of the last message in the channel, if one was sent
-   * @type {?Message}
-   * @readonly
-   */
-  get lastMessage() {
-    return this.messages.resolve(this.lastMessageId);
-  }
-
-  /**
-   * The date when the last pinned message was pinned, if there was one
-   * @type {?Date}
-   * @readonly
-   */
-  get lastPinAt() {
-    return this.lastPinTimestamp ? new Date(this.lastPinTimestamp) : null;
   }
 
   /**
@@ -372,8 +342,6 @@ class TextBasedChannel {
     const props = ['send'];
     if (full) {
       props.push(
-        'lastMessage',
-        'lastPinAt',
         'bulkDelete',
         'sendTyping',
         'createMessageCollector',

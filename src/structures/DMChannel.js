@@ -33,24 +33,6 @@ class DMChannel extends Channel {
        */
       this.recipient = this.client.users._add(data.recipients[0]);
     }
-
-    if ('last_message_id' in data) {
-      /**
-       * The channel's last message id, if one was sent
-       * @type {?Snowflake}
-       */
-      this.lastMessageId = data.last_message_id;
-    }
-
-    if ('last_pin_timestamp' in data) {
-      /**
-       * The timestamp when the last pinned message was pinned, if there was one
-       * @type {?number}
-       */
-      this.lastPinTimestamp = new Date(data.last_pin_timestamp).getTime();
-    } else {
-      this.lastPinTimestamp ??= null;
-    }
   }
 
   /**
@@ -59,7 +41,7 @@ class DMChannel extends Channel {
    * @readonly
    */
   get partial() {
-    return typeof this.lastMessageId === 'undefined';
+    return false;
   }
 
   /**
@@ -85,8 +67,6 @@ class DMChannel extends Channel {
 
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
   /* eslint-disable no-empty-function */
-  get lastMessage() {}
-  get lastPinAt() {}
   send() {}
   sendTyping() {}
   createMessageCollector() {}

@@ -4,11 +4,8 @@ const { Collection } = require('@discordjs/collection');
 const { makeURLSearchParams } = require("@discordjs/rest");
 const AnonymousGuild = require('./AnonymousGuild');
 const GuildAuditLogs = require('./GuildAuditLogs');
-const GuildPreview = require('./GuildPreview');
-const GuildTemplate = require('./GuildTemplate');
 const Integration = require('./Integration');
 const Webhook = require('./Webhook');
-const WelcomeScreen = require('./WelcomeScreen');
 const { Error } = require('../errors');
 const AutoModerationRuleManager = require('../managers/AutoModerationRuleManager');
 const GuildApplicationCommandManager = require('../managers/GuildApplicationCommandManager');
@@ -521,51 +518,6 @@ class Guild extends AnonymousGuild {
   }
 
   /**
-   * AFK voice channel for this guild
-   * @type {?VoiceChannel}
-   * @readonly
-   */
-  get afkChannel() {
-    return this.client.channels.resolve(this.afkChannelId);
-  }
-
-  /**
-   * System channel for this guild
-   * @type {?TextChannel}
-   * @readonly
-   */
-  get systemChannel() {
-    return this.client.channels.resolve(this.systemChannelId);
-  }
-
-  /**
-   * Widget channel for this guild
-   * @type {?TextChannel}
-   * @readonly
-   */
-  get widgetChannel() {
-    return this.client.channels.resolve(this.widgetChannelId);
-  }
-
-  /**
-   * Rules channel for this guild
-   * @type {?TextChannel}
-   * @readonly
-   */
-  get rulesChannel() {
-    return this.client.channels.resolve(this.rulesChannelId);
-  }
-
-  /**
-   * Public updates channel for this guild
-   * @type {?TextChannel}
-   * @readonly
-   */
-  get publicUpdatesChannel() {
-    return this.client.channels.resolve(this.publicUpdatesChannelId);
-  }
-
-  /**
    * The client user as a GuildMember of this guild
    * @type {?GuildMember}
    * @readonly
@@ -620,45 +572,6 @@ class Guild extends AnonymousGuild {
   }
 
   /**
-   * Fetches a collection of templates from this guild.
-   * Resolves with a collection mapping templates by their codes.
-   * @returns {Promise<Collection<string, GuildTemplate>>}
-   */
-  async fetchTemplates() {
-    const templates = await this.client.rest.get(Routes.guildTemplates(this.id));
-    return templates.reduce((col, data) => col.set(data.code, new GuildTemplate(this.client, data)), new Collection());
-  }
-
-  /**
-   * Fetches the welcome screen for this guild.
-   * @returns {Promise<WelcomeScreen>}
-   */
-  async fetchWelcomeScreen() {
-    const data = await this.client.rest.get(Routes.guildWelcomeScreen(this.id));
-    return new WelcomeScreen(this, data);
-  }
-
-  /**
-   * Creates a template for the guild.
-   * @param {string} name The name for the template
-   * @param {string} [description] The description for the template
-   * @returns {Promise<GuildTemplate>}
-   */
-  async createTemplate(name, description) {
-    const data = await this.client.rest.post(Routes.guildTemplates(this.id), { body: { name, description } });
-    return new GuildTemplate(this.client, data);
-  }
-
-  /**
-   * Obtains a guild preview for this guild from Discord.
-   * @returns {Promise<GuildPreview>}
-   */
-  async fetchPreview() {
-    const data = await this.client.rest.get(Routes.guildPreview(this.id));
-    return new GuildPreview(this.client, data);
-  }
-
-  /**
    * An object containing information about a guild's vanity invite.
    * @typedef {Object} Vanity
    * @property {?string} code Vanity invite code
@@ -684,7 +597,6 @@ class Guild extends AnonymousGuild {
     const data = await this.client.rest.get(Routes.guildVanityUrl(this.id));
     this.vanityURLCode = data.code;
     this.vanityURLUses = data.uses;
-
     return data;
   }
 
@@ -702,52 +614,6 @@ class Guild extends AnonymousGuild {
     const hooks = new Collection();
     for (const hook of apiHooks) hooks.set(hook.id, new Webhook(this.client, hook));
     return hooks;
-  }
-
-  /**
-   * Fetches the guild widget data, requires the widget to be enabled.
-   * @returns {Promise<Widget>}
-   * @example
-   * // Fetches the guild widget data
-   * guild.fetchWidget()
-   *   .then(widget => console.log(`The widget shows ${widget.channels.size} channels`))
-   *   .catch(console.error);
-   */
-  fetchWidget() {
-    return this.client.fetchGuildWidget(this.id);
-  }
-
-  /**
-   * Data for the Guild Widget Settings object
-   * @typedef {Object} GuildWidgetSettings
-   * @property {boolean} enabled Whether the widget is enabled
-   * @property {?GuildChannel} channel The widget invite channel
-   */
-
-  /**
-   * The Guild Widget Settings object
-   * @typedef {Object} GuildWidgetSettingsData
-   * @property {boolean} enabled Whether the widget is enabled
-   * @property {?GuildChannelResolvable} channel The widget invite channel
-   */
-
-  /**
-   * Fetches the guild widget settings.
-   * @returns {Promise<GuildWidgetSettings>}
-   * @example
-   * // Fetches the guild widget settings
-   * guild.fetchWidgetSettings()
-   *   .then(widget => console.log(`The widget is ${widget.enabled ? 'enabled' : 'disabled'}`))
-   *   .catch(console.error);
-   */
-  async fetchWidgetSettings() {
-    const data = await this.client.rest.get(Routes.guildWidgetSettings(this.id));
-    this.widgetEnabled = data.enabled;
-    this.widgetChannelId = data.channel_id;
-    return {
-      enabled: data.enabled,
-      channel: data.channel_id ? this.channels.cache.get(data.channel_id) : null,
-    };
   }
 
   /**
@@ -924,44 +790,6 @@ class Guild extends AnonymousGuild {
    * @typedef {VoiceChannel|StageChannel|Snowflake} GuildVoiceChannelResolvable
    */
 
-  /**
-   * Updates the guild's welcome screen
-   * @param {WelcomeScreenEditData} data Data to edit the welcome screen with
-   * @returns {Promise<WelcomeScreen>}
-   * @example
-   * guild.editWelcomeScreen({
-   *   description: 'Hello World',
-   *   enabled: true,
-   *   welcomeChannels: [
-   *     {
-   *       description: 'foobar',
-   *       channel: '222197033908436994',
-   *     }
-   *   ],
-   * })
-   */
-  async editWelcomeScreen(data) {
-    const { enabled, description, welcomeChannels } = data;
-    const welcome_channels = welcomeChannels?.map(welcomeChannelData => {
-      const emoji = this.emojis.resolve(welcomeChannelData.emoji);
-      return {
-        emoji_id: emoji?.id,
-        emoji_name: emoji?.name ?? welcomeChannelData.emoji,
-        channel_id: this.channels.resolveId(welcomeChannelData.channel),
-        description: welcomeChannelData.description,
-      };
-    });
-
-    const patchData = await this.client.rest.patch(Routes.guildWelcomeScreen(this.id), {
-      body: {
-        welcome_channels,
-        description,
-        enabled,
-      }
-    })
-
-    return new WelcomeScreen(this, patchData);
-  }
 
   /**
    * Leaves the guild.

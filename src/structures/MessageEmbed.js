@@ -1,13 +1,7 @@
 'use strict';
 
-const process = require('node:process');
 const { RangeError } = require('../errors');
 const Util = require('../util/Util');
-
-let deprecationEmittedForSetAuthor = false;
-let deprecationEmittedForSetFooter = false;
-
-// TODO: Remove the deprecated code for `setAuthor()` and `setFooter()`.
 
 /**
  * Represents an embed in a message (image/video preview, rich embed, etc.)
@@ -376,15 +370,6 @@ class MessageEmbed {
     }
 
     if (typeof options === 'string') {
-      if (!deprecationEmittedForSetAuthor) {
-        process.emitWarning(
-          'Passing strings for MessageEmbed#setAuthor is deprecated. Pass a sole object instead.',
-          'DeprecationWarning',
-        );
-
-        deprecationEmittedForSetAuthor = true;
-      }
-
       options = { name: options, url: deprecatedURL, iconURL: deprecatedIconURL };
     }
 
@@ -435,15 +420,6 @@ class MessageEmbed {
     }
 
     if (typeof options === 'string') {
-      if (!deprecationEmittedForSetFooter) {
-        process.emitWarning(
-          'Passing strings for MessageEmbed#setFooter is deprecated. Pass a sole object instead.',
-          'DeprecationWarning',
-        );
-
-        deprecationEmittedForSetFooter = true;
-      }
-
       options = { text: options, iconURL: deprecatedIconURL };
     }
 

@@ -50,22 +50,6 @@ class BaseGuildTextChannel extends GuildChannel {
       this.nsfw = Boolean(data.nsfw);
     }
 
-    if ('last_message_id' in data) {
-      /**
-       * The last message id sent in the channel, if one was sent
-       * @type {?Snowflake}
-       */
-      this.lastMessageId = data.last_message_id;
-    }
-
-    if ('last_pin_timestamp' in data) {
-      /**
-       * The timestamp when the last pinned message was pinned, if there was one
-       * @type {?number}
-       */
-      this.lastPinTimestamp = data.last_pin_timestamp ? new Date(data.last_pin_timestamp).getTime() : null;
-    }
-
     if ('default_auto_archive_duration' in data) {
       /**
        * The default auto archive duration for newly created threads in this channel
@@ -129,8 +113,6 @@ class BaseGuildTextChannel extends GuildChannel {
 
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
   /* eslint-disable no-empty-function */
-  get lastMessage() {}
-  get lastPinAt() {}
   send() {}
   sendTyping() {}
   createMessageCollector() {}

@@ -1,6 +1,5 @@
 'use strict';
 
-const process = require('node:process');
 const { Collection } = require('@discordjs/collection');
 const CachedManager = require('./CachedManager');
 const { Guild } = require('../structures/Guild');
@@ -12,8 +11,6 @@ const OAuth2Guild = require('../structures/OAuth2Guild');
 const { Role } = require('../structures/Role');
 const { Routes } = require('discord-api-types/v10');
 
-let cacheWarningEmitted = false;
-
 /**
  * Manages API methods for Guilds and stores their cache.
  * @extends {CachedManager}
@@ -21,13 +18,6 @@ let cacheWarningEmitted = false;
 class GuildManager extends CachedManager {
   constructor(client, iterable) {
     super(client, Guild, iterable);
-    if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
-      cacheWarningEmitted = true;
-      process.emitWarning(
-        `Overriding the cache handling for ${this.constructor.name} is unsupported and breaks functionality.`,
-        'UnsupportedCacheOverwriteWarning',
-      );
-    }
   }
 
   /**

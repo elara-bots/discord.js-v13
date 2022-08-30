@@ -1,6 +1,5 @@
 'use strict';
 
-const process = require('node:process');
 const { makeURLSearchParams } = require("@discordjs/rest");
 const MessagePayload = require('./MessagePayload');
 const { Error } = require('../errors');
@@ -8,8 +7,6 @@ const { WebhookTypes } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
 const { Routes } = require('discord-api-types/v10');
-
-let deprecationEmittedForFetchMessage = false;
 
 /**
  * Represents a webhook.
@@ -210,36 +207,6 @@ class Webhook {
   }
 
   /**
-   * Sends a raw slack message with this webhook.
-   * @param {Object} body The raw body to send
-   * @returns {Promise<boolean>}
-   * @example
-   * // Send a slack message
-   * webhook.sendSlackMessage({
-   *   'username': 'Wumpus',
-   *   'attachments': [{
-   *     'pretext': 'this looks pretty cool',
-   *     'color': '#F0F',
-   *     'footer_icon': 'http://snek.s3.amazonaws.com/topSnek.png',
-   *     'footer': 'Powered by sneks',
-   *     'ts': Date.now() / 1_000
-   *   }]
-   * }).catch(console.error);
-   * @see {@link https://api.slack.com/messaging/webhooks}
-   */
-  async sendSlackMessage(body) {
-    if (!this.token) throw new Error('WEBHOOK_TOKEN_UNAVAILABLE');
-
-    const data = await this.client.rest.post(Routes.webhookPlatform(this.id, this.token, "slack"), {
-      body,
-      auth: false,
-      query: { wait: true }
-    })
-
-    return data.toString() === 'ok';
-  }
-
-  /**
    * Options used to edit a {@link Webhook}.
    * @typedef {Object} WebhookEditData
    * @property {string} [name=this.name] The new name for the webhook
@@ -288,15 +255,6 @@ class Webhook {
    */
   async fetchMessage(message, cacheOrOptions = { cache: true }) {
     if (typeof cacheOrOptions === 'boolean') {
-      if (!deprecationEmittedForFetchMessage) {
-        process.emitWarning(
-          'Passing a boolean to cache the message in Webhook#fetchMessage is deprecated. Pass an object instead.',
-          'DeprecationWarning',
-        );
-
-        deprecationEmittedForFetchMessage = true;
-      }
-
       cacheOrOptions = { cache: cacheOrOptions };
     }
 
@@ -426,7 +384,6 @@ class Webhook {
   static applyToClass(structure, ignore = []) {
     for (const prop of [
       'send',
-      'sendSlackMessage',
       'fetchMessage',
       'edit',
       'editMessage',

@@ -1,12 +1,9 @@
 'use strict';
 
-const process = require('node:process');
 const Base = require('./Base');
 const { Error } = require('../errors');
 const Permissions = require('../util/Permissions');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
-
-let deprecationEmittedForComparePositions = false;
 
 /**
  * Represents a role on Discord.
@@ -332,15 +329,6 @@ class Role extends Base {
    * @deprecated Use {@link RoleManager#comparePositions} instead.
    */
   static comparePositions(role1, role2) {
-    if (!deprecationEmittedForComparePositions) {
-      process.emitWarning(
-        'The Role.comparePositions method is deprecated. Use RoleManager#comparePositions instead.',
-        'DeprecationWarning',
-      );
-
-      deprecationEmittedForComparePositions = true;
-    }
-
     return role1.guild.roles.comparePositions(role1, role2);
   }
 }
