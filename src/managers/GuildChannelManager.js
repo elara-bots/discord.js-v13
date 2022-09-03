@@ -242,7 +242,7 @@ class GuildChannelManager extends CachedManager {
     let defaultAutoArchiveDuration = data.defaultAutoArchiveDuration;
     if (defaultAutoArchiveDuration === 'MAX') defaultAutoArchiveDuration = resolveAutoArchiveMaxLimit(this.guild);
 
-    const newData = await this.client.rest.patch(Routes.channel(id), {
+    const newData = await this.client.rest.patch(Routes.channel(channel), {
       body: {
         name: (data.name ?? channel.name).trim(),
         type: data.type,
