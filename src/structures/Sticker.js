@@ -161,7 +161,7 @@ class Sticker extends Base {
    * @type {string}
    */
   get url() {
-    return this.client.rest.cdn.sticker(this.id, this.format);
+    return this.client.rest.cdn.sticker(this.id, this.format === 'apng' ? 'png' : this.format);
   }
 
   /**
