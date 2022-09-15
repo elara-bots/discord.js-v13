@@ -1,5 +1,6 @@
 'use strict';
 
+const TextBasedChannel = require('./interfaces/TextBasedChannel');
 const GuildChannel = require('./GuildChannel');
 const GuildForumThreadManager = require('../managers/GuildForumThreadManager');
 
@@ -54,8 +55,14 @@ class GuildForumChannel extends GuildChannel {
       this.defaultThreadRateLimitPerUser ??= null;
     }
   }
-}
 
+  fetchWebhooks() {}
+  createWebhook() {}
+}
+TextBasedChannel.applyToClass(GuildForumChannel, true, [
+  'fetchWebhooks',
+  'createWebhook'
+]);
 module.exports = GuildForumChannel;
 
 /**
