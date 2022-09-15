@@ -16,6 +16,43 @@ class GuildForumChannel extends GuildChannel {
      * @type {GuildForumThreadManager}
      */
     this.threads = new GuildForumThreadManager(this);
+    
+    this._patch(data);
+  }
+
+  _patch(data) {
+    super._patch(data);
+    if ('available_tags' in data) {
+      /**
+       * The set of tags that can be used in this channel.
+       * @type {GuildForumTag[]}
+       */
+      this.availableTags = data.available_tags.map(tag => transformGuildForumTag(tag));
+    } else {
+      this.availableTags ??= [];
+    }
+
+    if ('default_reaction_emoji' in data) {
+      /**
+       * The emoji to show in the add reaction button on a thread in a guild forum channel
+       * @type {?DefaultReaction}
+       */
+      this.defaultReactionEmoji = data.default_reaction_emoji
+        ? transformGuildDefaultReaction(data.default_reaction_emoji)
+        : null;
+    } else {
+      this.defaultReactionEmoji ??= null;
+    }
+
+    if ('default_thread_rate_limit_per_user' in data) {
+      /**
+       * The initial rate_limit_per_user to set on newly created threads in a channel.
+       * @type {?number}
+       */
+      this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
+    } else {
+      this.defaultThreadRateLimitPerUser ??= null;
+    }
   }
 }
 
