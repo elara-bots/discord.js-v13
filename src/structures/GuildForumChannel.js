@@ -59,7 +59,14 @@ class GuildForumChannel extends GuildChannel {
   fetchWebhooks() {}
   createWebhook() {}
 }
-TextBasedChannel.applyToClass(GuildForumChannel, true);
+TextBasedChannel.applyToClass(GuildForumChannel, true, [
+  'bulkDelete',
+  'sendTyping',
+  'createMessageCollector',
+  'awaitMessages',
+  'createMessageComponentCollector',
+  'awaitMessageComponent'
+]);
 module.exports = GuildForumChannel;
 
 /**
