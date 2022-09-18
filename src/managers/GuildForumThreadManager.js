@@ -50,26 +50,24 @@ class GuildForumThreadManager extends ThreadManager {
       throw new TypeError("GUILD_FORUM_MESSAGE_REQUIRED");
     }
 
-    const messagePayload =
-      message instanceof MessagePayload ? message.resolveBody() : MessagePayload.create(this, message);
-
-    const { body, files } = messagePayload.resolveFiles();
+    const { data, files } = await (message instanceof MessagePayload ? message : MessagePayload.create(this, message))
+      .resolveData()
+      .resolveFiles();
 
     if (autoArchiveDuration === 'MAX') autoArchiveDuration = resolveAutoArchiveMaxLimit(this.channel.guild);
-
-    const data = await this.client.rest.post(Routes.threads(this.channel.id), {
+    const r = await this.client.rest.post(Routes.threads(this.channel.id), {
       body: {
         name,
         auto_archive_duration: autoArchiveDuration,
         rate_limit_per_user: rateLimitPerUser,
-        message: body,
+        message: data,
       },
       files,
       reason,
     });
 
     // TODO: Posts will most likely need to be serialized differently than regular threads.
-    return this.client.actions.ThreadCreate.handle(data).thread;
+    return this.client.actions.ThreadCreate.handle(r).thread;
   }
 }
 
