@@ -62,7 +62,7 @@ class GuildForumThreadManager extends ThreadManager {
         name,
         auto_archive_duration: autoArchiveDuration,
         rate_limit_per_user: rateLimitPerUser,
-        ...body,
+        message: body,
       },
       files,
       reason,
