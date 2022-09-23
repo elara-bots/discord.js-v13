@@ -5908,6 +5908,7 @@ export interface GuildTextThreadCreateOptions<AllowedThreadType> extends StartTh
 
 export interface GuildForumThreadCreateOptions extends StartThreadOptions {
   message: MessageOptions | MessagePayload;
+  appliedTags: Snowflake[]
 }
 
 export interface ThreadEditData {

@@ -45,6 +45,7 @@ class GuildForumThreadManager extends ThreadManager {
     message,
     reason,
     rateLimitPerUser,
+    appliedTags
   } = {}) {
     if (!message) {
       throw new TypeError("GUILD_FORUM_MESSAGE_REQUIRED");
@@ -61,6 +62,7 @@ class GuildForumThreadManager extends ThreadManager {
         auto_archive_duration: autoArchiveDuration,
         rate_limit_per_user: rateLimitPerUser,
         message: data,
+        applied_tags: appliedTags
       },
       files,
       reason,

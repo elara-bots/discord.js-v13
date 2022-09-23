@@ -278,7 +278,8 @@ class ThreadChannel extends Channel {
    * @returns {Promise<Message>}
    */
   fetchStarterMessage(options) {
-    return this.parent?.messages.fetch(this.id, options);
+    const channel = this.parent?.type === "GUILD_FORUM" ? this : this.parent;
+    return channel?.messages.fetch(this.id, options) ?? null;
   }
 
   /**
