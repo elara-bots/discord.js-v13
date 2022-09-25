@@ -317,6 +317,7 @@ class ThreadChannel extends Channel {
         rate_limit_per_user: data.rateLimitPerUser,
         locked: data.locked,
         invitable: this.type === 'GUILD_PRIVATE_THREAD' ? data.invitable : undefined,
+        applied_tags: data.appliedTags || data.applied_tags
       },
       reason,
     });
