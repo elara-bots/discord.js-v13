@@ -182,7 +182,7 @@ class GuildInviteManager extends CachedManager {
     const id = this.guild.channels.resolveId(channel);
     if (!id) throw new Error('GUILD_CHANNEL_RESOLVE');
 
-    const invite = await this.client.rest.patch(Routes.channelInvites(id), {
+    const invite = await this.client.rest.post(Routes.channelInvites(id), {
       body: {
         temporary,
         max_age: maxAge,
