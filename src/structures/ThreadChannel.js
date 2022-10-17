@@ -171,6 +171,17 @@ class ThreadChannel extends Channel {
     } else {
       this.totalMessageSent ??= null;
     }
+
+    if ('applied_tags' in data) {
+      /**
+       * The number of messages ever sent in a thread, similar to `ThreadChannel#messageCount` except it
+       * will not decrement whenever a message is deleted
+       * @type {Snowflake[]}
+       */
+      this.appliedTags = data.applied_tags;
+    } else {
+      this.appliedTags ??= [];
+    }
     
     if (data.member && this.client.user) this.members._add({ user_id: this.client.user.id, ...data.member });
     if (data.messages) for (const message of data.messages) this.messages._add(message);
