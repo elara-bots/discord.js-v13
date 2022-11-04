@@ -157,7 +157,6 @@ class InteractionResponses {
    *   .catch(console.error);
    */
   async deleteReply() {
-    if (this.ephemeral) throw new Error('INTERACTION_EPHEMERAL_REPLIED');
     await this.webhook.deleteMessage('@original');
   }
 
