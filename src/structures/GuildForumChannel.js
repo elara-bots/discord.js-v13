@@ -23,6 +23,17 @@ class GuildForumChannel extends GuildChannel {
 
   _patch(data) {
     super._patch(data);
+
+    if ('topic' in data) {
+      /**
+       * The topic for the forum channel.
+       * @type {?string}
+       */
+      this.topic = data.topic;
+    } else {
+      this.topic ??= null;
+    }
+
     if ('available_tags' in data) {
       /**
        * The set of tags that can be used in this channel.

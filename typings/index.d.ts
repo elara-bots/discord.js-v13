@@ -1101,6 +1101,7 @@ export abstract class GuildChannel extends Channel {
 
 export class GuildForumChannel extends GuildChannel {
   public constructor(guild: Guild, data?: RawGuildChannelData, client?: Client, immediatePatch?: boolean);
+  public topic: string | null;
   public threads: GuildForumThreadManager;
   public defaultThreadRateLimitPerUser: number | null;
   public defaultReactionEmoji: { emojiId: string, emojiName: string } | null;
