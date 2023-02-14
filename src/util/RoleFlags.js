@@ -8,7 +8,7 @@ const BitField = require('./BitField');
 class RoleFlags extends BitField {
   /**
    * Bitfield of the packed bits
-   * @type {bigint}
+   * @type {number}
    * @name RoleFlags#bitfield
    */
 
@@ -18,7 +18,7 @@ class RoleFlags extends BitField {
    * * A role tag number
    * * An instance of Roles
    * * An Array of RoleTagsResolvable
-   * @typedef {string|bigint|RoleFlags|RoleTagsResolvable[]} RoleTagsResolvable
+   * @typedef {string|number|RoleFlags|RoleTagsResolvable[]} RoleTagsResolvable
    */
 
   /**
@@ -60,18 +60,18 @@ class RoleFlags extends BitField {
 /**
  * Numeric role flags. All available properties:
  * * `IN_PROMPT` 
- * @type {Object<string, bigint>}
+ * @type {Object<string, number>}
  */
 RoleFlags.FLAGS = {
-    IN_PROMPT: 1n << 0n,
+    IN_PROMPT: 1 << 0,
 };
 
 /**
  * Bitfield representing every role tags combined
- * @type {bigint}
+ * @type {number}
  */
-RoleFlags.ALL = Object.values(RoleFlags.FLAGS).reduce((all, p) => all | p, 0n);
+RoleFlags.ALL = Object.values(RoleFlags.FLAGS).reduce((all, p) => all | p, 0);
 
-RoleFlags.defaultBit = BigInt(0);
+RoleFlags.defaultBit = 0;
 
 module.exports = RoleFlags;
