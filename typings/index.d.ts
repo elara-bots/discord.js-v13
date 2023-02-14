@@ -2518,6 +2518,11 @@ export class UserFlags extends BitField<UserFlagsString> {
   public static resolve(bit?: BitFieldResolvable<UserFlagsString, number>): number;
 }
 
+export class RoleFlags extends BitField<RoleFlagsString> {
+  public static FLAGS: Record<RoleFlagsString, number>;
+  public static resolve(bit?: BitFieldResolvable<RoleFlagsString, number>): number;
+}
+
 export class Util extends null {
   public constructor();
   public static archivedThreadSweepFilter<K, V>(lifetime?: number): SweepFilter<K, V>;
@@ -5944,9 +5949,13 @@ export type UserFlagsString =
   | 'BOT_HTTP_INTERACTIONS'
   | 'ACTIVE_DEVELOPER';
 
+export type RoleFlagsString = 'IN_PROMPT'
+
 export type UserMention = `<@${Snowflake}>`;
 
 export type UserResolvable = User | Snowflake | Message | GuildMember | ThreadMember;
+
+export type RoleTagsResolvable = RoleFlagsString | BigInt | string;
 
 export interface Vanity {
   code: string | null;

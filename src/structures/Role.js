@@ -4,6 +4,7 @@ const Base = require('./Base');
 const { Error } = require('../errors');
 const Permissions = require('../util/Permissions');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
+const RoleFlags = require('../util/RoleFlags');
 
 /**
  * Represents a role on Discord.
@@ -30,6 +31,12 @@ class Role extends Base {
      * @type {?string}
      */
     this.unicodeEmoji = null;
+
+    /**
+     * The flags for the role
+     * @type {?RoleFlags}
+     */
+    this.flags = null;
 
     if (data) this._patch(data);
   }
@@ -99,6 +106,8 @@ class Role extends Base {
     if ('icon' in data) this.icon = data.icon;
 
     if ('unicode_emoji' in data) this.unicodeEmoji = data.unicode_emoji;
+
+    if ('flags' in data) this.flags = new RoleFlags(this.flags)
 
     /**
      * The tags this role has
