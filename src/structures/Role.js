@@ -107,7 +107,7 @@ class Role extends Base {
 
     if ('unicode_emoji' in data) this.unicodeEmoji = data.unicode_emoji;
 
-    if ('flags' in data) this.flags = new RoleFlags(this.flags)
+    if ('flags' in data) this.flags = new RoleFlags(data.flags)
 
     /**
      * The tags this role has
