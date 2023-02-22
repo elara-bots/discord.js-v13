@@ -2486,6 +2486,7 @@ export class User extends PartialTextBasedChannel(Base) {
   public readonly createdTimestamp: number;
   public discriminator: string;
   public readonly defaultAvatarURL: string;
+  public readonly displayName: string | null;
   public readonly dmChannel: DMChannel | null;
   public flags: Readonly<UserFlags> | null;
   public readonly hexAccentColor: HexColorString | null | undefined;

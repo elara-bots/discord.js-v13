@@ -61,6 +61,16 @@ class User extends Base {
       this.discriminator ??= null;
     }
 
+    if ('display_name' in data) {
+      /**
+       * A display username for the user
+       * @type {?string}
+       */
+      this.displayName = data.display_name;
+    } else {
+      this.displayName ??= null;
+    }
+
     if ('avatar' in data) {
       /**
        * The user avatar's hash
